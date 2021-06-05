@@ -1,0 +1,22 @@
+# create new chain
+iptables -w -t nat -N PROXY
+iptables -w -t nat -I OUTPUT -j PROXY
+
+# exclude local traffic, see: http://manpages.org/ss-redir
+iptables -w -t nat -A PROXY -d 127.0.0.0/8 -j RETURN
+iptables -w -t nat -A PROXY -d 192.168.0.0/16 -j RETURN
+
+# socksify whole TCP traffic
+iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8123
+iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8124
+iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8125
+# socksify only DNS UDP traffic
+iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8123
+iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8124
+iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8125
+
+trap "iptables -w -t nat -D OUTPUT -j PROXY; iptables -w -t nat -F PROXY; iptables -w -t nat -X PROXY" EXIT
+
+# run socksifier
+chmod +x redsocks
+./redsocks -c redsocks.conf
