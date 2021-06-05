@@ -13,7 +13,7 @@ past your data into file settings.ini
 
 ![image](https://user-images.githubusercontent.com/46646744/120905618-2c1ee080-c64b-11eb-9ce8-fcc24da98004.png)
 
-note : if are using leave the first part of settings.ini empty you have only te setup your ssh settings
+note : if are using Direct ssh leave the first part of settings.ini empty you have only te setup your ssh settings
 
 # how it works!
 
