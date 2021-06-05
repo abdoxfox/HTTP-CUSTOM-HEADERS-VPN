@@ -1,6 +1,10 @@
 # http-ssl-ssh-tunneling
 http ssl ssh tunneling vpn for android and linux devices
 
+# packages :
+
+[+] - apt install git python openssh sshpass netcat -y
+
 # configuration :
 
 past your data into file settings.ini 
@@ -15,7 +19,7 @@ note 1 : if you will use http or direct ssh connection :
 
 [+] - chmod +x runvpn.sh
 
-[=] - ./runvpn.sh 1    (argument 1 means that you will use payload / direct ssh connection)
+[+] - ./runvpn.sh 1    (argument 1 means that you will use payload / direct ssh connection)
 
 note 2 : if are using ssl (sni bughost )
 
@@ -23,6 +27,6 @@ setup your sni bughost in settings.ini file and run the following command :
 
 [+] - chmod +x runvpn.sh
 
-[=] - ./runvpn.sh (argument 2 means that you will use ssl  method )
+[+] - ./runvpn.sh 2 (argument 2 means that you will use ssl  method )
 
 
