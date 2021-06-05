@@ -5,6 +5,8 @@ http ssl ssh tunneling vpn for android and linux devices
 
 [+] - apt install git python openssh sshpass netcat -y
 
+[+] - apt install screen 
+
 # configuration :
 
 past your data into file settings.ini 
@@ -15,18 +17,40 @@ note : if are using leave the first part of settings.ini empty you have only te 
 
 # how it works!
 
-note 1 : if you will use http or direct ssh connection :
+(root is required in android )
+
+# if you will use custom payload or direct ssh connection :
+
+* setup yor custom payload and proxy (if need it  else leave it empty) and ssh details in settings.ini file.
+
+[+] - cd http-ssl-ssh-injector
+
+[+] - sudo su 
 
 [+] - chmod +x runvpn.sh
 
-[+] - ./runvpn.sh 1    (argument 1 means that you will use payload / direct ssh connection)
+[+] - chmod +x proxification
 
-note 2 : if are using ssl (sni bughost )
-
-setup your sni bughost in settings.ini file and run the following command :
+[+] - chmod +x redsocks
 
 [+] - chmod +x runvpn.sh
 
-[+] - ./runvpn.sh 2 (argument 2 means that you will use ssl  method )
+[+] - ./runvpn.sh 1          (argument 1 means that you will use payload / direct ssh connection)
+
+ # if are using ssl (sni bughost )
+
+* setup your sni bughost and ssh details in settings.ini file and run the following command :
+
+[+] - cd http-ssl-ssh-injector
+
+[+] - sudo su 
+
+[+] - chmod +x runvpn.sh
+
+[+] - chmod +x proxification
+
+[+] - chmod +x redsocks
+
+[+] - ./runvpn.sh 2         (argument 2 means that you will use ssl  method )
 
 
