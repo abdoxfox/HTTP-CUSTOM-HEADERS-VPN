@@ -19,6 +19,8 @@ note : if are using leave the first part of settings.ini empty you have only te 
 
 (root is required in android )
 
+[+] - git clone https://github.com/abdoxfox/http-ssl-ssh-injector.git
+
 # if you will use custom payload or direct ssh connection :
 
 * setup yor custom payload and proxy (if need it  else leave it empty) and ssh details in settings.ini file.
