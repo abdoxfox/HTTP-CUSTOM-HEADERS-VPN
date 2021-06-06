@@ -27,6 +27,7 @@ if [ $var = 'SUCCESSFULLY' ];then
 	chmod +x proxification
 	./proxification > /dev/null
 	echo -e "${SCOLOR}"
+	iptables --flush 
 else
 	echo -e "${RED}something wrong with your settings"
 	echo -e "check settings.ini file again ${SCOLOR}"
