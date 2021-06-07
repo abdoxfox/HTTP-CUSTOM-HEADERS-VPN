@@ -7,7 +7,7 @@ import time
 import sys,os
 import platform
 import configparser
-from http_direct_injector import handler
+from ssl import handler
 # colors
 bg=''
 G = bg+'\033[32m'
