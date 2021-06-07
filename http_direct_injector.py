@@ -189,7 +189,7 @@ class injector:
 		    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
 		except OSError:
 		    self.logs(O+'Port already used by another process\nRun script again'+GR)
-		    self.killpid()
+		    self.linux()
 		    
 		    
 		while True:
@@ -204,8 +204,9 @@ class injector:
 		        
 		sockt.close()
 	def logs(self,log):
+		logtime = str(time.ctime()).split()[3]
 		logfile = open('logs.txt','a')
-		logfile.write(str(log)+'\n')
+		logfile.write(f'[{logtime}] : {str(log)}\n')
 if __name__=='__main__':
 	start = injector()
 	start.create_connection()
