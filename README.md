@@ -35,7 +35,7 @@ note : if are using Direct ssh leave the first part of settings.ini empty you ha
 
  # if are using ssl (sni bughost )
 
-* setup your sni bughost and ssh details in settings.ini file and run the following command :
+* setup your sni bughost and ssh details in settings.ini file and run the following commands :
 
 [+] - cd http-ssl-ssh-injector
 
