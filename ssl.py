@@ -1,4 +1,3 @@
-#pylint:disable=E0001
 import random
 import ssl
 import time
@@ -28,13 +27,14 @@ logo='''
     '''
 
 def logs(log):
+        logtime = str(time.ctime()).split()[3]
         logfile = open('logs.txt','a')
-        logfile.write(str(log)+'\n')
+        logfile.write(f'[{logtime}] : {str(log)}\n')
 
 def welcoming(str):
     	color=[bg,R,O,GR]
     	for n in str+ '\n':
-    		print(random.choice(color),end='')
+    		logs(random.choice(color),end='')
     		sys.stdout.write(n)
     		sys.stdout.flush()
     		time.sleep(0.01)
@@ -44,7 +44,7 @@ config = configparser.ConfigParser()
 try:
     config.read_file(open('settings.ini'))
 except Exception as e:
-    print(f'{R}ERROR {e}')
+    logs(f'{R}ERROR {e}')
     sys.exit()
 
 LISTEN_PORT = '9092'
@@ -66,6 +66,7 @@ def conection(c, a):
     try:
          logs('<#> Client {} received!'.format(a[-1]))
          request = c.recv(9124).decode()
+         print(request)
          host = request.split(':')[0].split()[-1]
          port = request.split(':')[-1].split()[0]
          s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
