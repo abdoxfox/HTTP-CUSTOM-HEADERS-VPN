@@ -6,7 +6,8 @@ import random
 import time
 import sys,os
 import platform
-
+import configparser
+from http_direct_injector import handler
 # colors
 bg=''
 G = bg+'\033[32m'
@@ -37,7 +38,7 @@ class sshRunn:
 				    while e == '[Errno 9] Bad file descriptor':
 				           soc.sendall(payload)
 				    else:
-				    	logs(e)
+				    	self.logs(e)
 				
 				response = subprocess.Popen(
 	                (
@@ -53,7 +54,7 @@ class sshRunn:
 				for line in response.stdout:
 					line = line.decode('utf-8',errors='ignore').lstrip(r'(debug1|Warning):').strip() + '\r'
 					self.logs(line)
-					if 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
+					if 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY'+GR)
 					elif 'Permission denied' in line:self.logs(R+'Access Denied'+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed'+GR)
 					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs'+GR)
@@ -70,26 +71,36 @@ class sshRunn:
 		    thread=threading.Thread(target=self.ssh_client,args=('1080',host,port,user,password))
 		    thread.start()
 		except ConnectionRefusedError:            
-		    logs(R+' <!> Run client.py first in a new tab\n\tthen try again'+GR)
+		    self.logs(R+' <!> Run client.py first in a new tab\n\tthen try again'+GR)
 		    soc.close()
 		      
 		except KeyboardInterrupt:
-				logs(R+'ssh stopped'+GR)
+				self.logs(R+'ssh stopped'+GR)
 
 	def logs(self,log):
+		logtime = str(time.ctime()).split()[3]
 		logfile = open('sshlogs.txt','a')
-		logfile.write(str(log)+'\n')
+		logfile.write(f'[{logtime}] : {str(log)}\n')
 if __name__=='__main__':		        
-	import configparser
+	
+	
+	
+	start = sshRunn('127.0.0.1','9092')
 	config = configparser.ConfigParser()
 	try:
 		config.read_file(open('settings.ini'))
 	except Exception as e:
+		start.logs(f'{R}ERROR {e}')
 		sys.exit()
+	
 	host = config['ssh']['host']
 	port = config['ssh']['port']
 	user = config['ssh']['username']
 	password = config['ssh']['password']
+	if host:
+		start.create_connection(host,port,user,password) 
+	else:
+		start.logs(f'{R}ssh field is empty in file  settings.ini {GR}')
+		handler()
+		sys.exit
 	
-	start = sshRunn('127.0.0.1','9092')
-	start.create_connection(host,port,user,password)    
