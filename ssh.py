@@ -101,6 +101,5 @@ if __name__=='__main__':
 		start.create_connection(host,port,user,password) 
 	else:
 		start.logs(f'{R}ssh field is empty in file  settings.ini {GR}')
-		handler()
 		sys.exit
 	
