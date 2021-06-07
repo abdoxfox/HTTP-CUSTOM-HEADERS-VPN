@@ -27,13 +27,7 @@ note : if are using Direct ssh leave the first part of settings.ini empty you ha
 
 [+] - cd http-ssl-ssh-injector
 
-[+] - sudo su 
-
-[+] - chmod +x runvpn.sh
-
-[+] - chmod +x proxification
-
-[+] - chmod +x redsocks
+[+] - sudo  or tsu for termux  #run as root
 
 [+] - chmod +x runvpn.sh
 
@@ -45,13 +39,9 @@ note : if are using Direct ssh leave the first part of settings.ini empty you ha
 
 [+] - cd http-ssl-ssh-injector
 
-[+] - sudo su 
+[+] - sudo or tsu 
 
 [+] - chmod +x runvpn.sh
-
-[+] - chmod +x proxification
-
-[+] - chmod +x redsocks
 
 [+] - ./runvpn.sh 2         (argument 2 means that you will use ssl  method )
 
