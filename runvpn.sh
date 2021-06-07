@@ -18,9 +18,9 @@ echo -e "${YELLOW}---logs----${SCOLOR}"
 screen -AmdS nohub python ssh.py 
 sleep 5
 cat logs.txt
-cat sshlog.txt
+cat sshlogs.txt
 
-var=`cat sshlog.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
+var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
 echo $var
 if [ $var = 'SUCCESSFULLY' ];then 
 	echo -e "${GREEN}---Tunneling  starts-----"
@@ -34,4 +34,4 @@ else
 fi
 python pidkill.py
 rm logs.txt
-rm sshlog.txt
+rm sshlogs.txt
