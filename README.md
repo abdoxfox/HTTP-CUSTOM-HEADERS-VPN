@@ -3,7 +3,7 @@ http ssl ssh tunneling vpn for android and linux devices
 
 # packages :
 
-[+] - apt install git python openssh sshpass netcat -y
+[+] - apt install git python openssh sshpass netcat-openbsd -y
 
 [+] - apt install screen 
 
