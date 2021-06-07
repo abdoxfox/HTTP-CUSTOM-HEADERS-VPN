@@ -52,7 +52,7 @@ class sshRunn:
 				
 				for line in response.stdout:
 					line = line.decode('utf-8',errors='ignore').lstrip(r'(debug1|Warning):').strip() + '\r'
-					logs(line)
+					self.logs(line)
 					if 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
 					elif 'Permission denied' in line:self.logs(R+'Access Denied'+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed'+GR)
@@ -85,7 +85,6 @@ if __name__=='__main__':
 	try:
 		config.read_file(open('settings.ini'))
 	except Exception as e:
-		logs(f'{R}ERROR {e}')
 		sys.exit()
 	host = config['ssh']['host']
 	port = config['ssh']['port']
