@@ -189,7 +189,7 @@ class injector:
 		    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
 		except OSError:
 		    self.logs(O+'Port already used by another process\nRun script again'+GR)
-		    self.linux()
+		    self.killpid()
 		    
 		    
 		while True:
