@@ -27,11 +27,14 @@ if [ $var = 'SUCCESSFULLY' ];then
 	chmod +x proxification
 	./proxification > /dev/null
 	echo -e "${SCOLOR}"
-	iptables --flush 
+	
 else
 	echo -e "${RED}something wrong with your settings"
 	echo -e "check settings.ini file again ${SCOLOR}"
 fi
+echo -e "${RED} vpn service stopped" 
 python pidkill.py
+iptables --flush 
 rm logs.txt
 rm sshlogs.txt
+echo -e "exiting ${SCOLOR}"
