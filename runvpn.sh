@@ -11,7 +11,7 @@ if [ $argv = '1' ]; then
 	screen -AmdS nohub python http_direct_injector.py
 	
 else
-	screen -AmdS nohub python ssl.py 
+	screen -AmdS nohub python sni.py 
 fi
 echo -e "${YELLOW}---logs----${SCOLOR}"
 
