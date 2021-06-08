@@ -20,7 +20,7 @@ sleep 5
 cat logs.txt
 cat sshlogs.txt
 
-var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
+var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
 echo $var
 if [ $var = 'SUCCESSFULLY' ];then 
 	echo -e "${GREEN}---Tunneling  starts-----"
