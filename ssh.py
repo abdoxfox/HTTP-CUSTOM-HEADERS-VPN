@@ -42,7 +42,7 @@ class sshRunn:
 				
 				response = subprocess.Popen(
 	                (
-	                   f'sshpass -p {password} ssh {username}@{host} -p {port} -v {dynamic_port_forwarding} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="nc --proxy {inject_host}:{inject_port} %h %p"'
+	                   f'sshpass -p {password} ssh -o "ProxyCommand=nc --proxy {inject_host}:{inject_port} %h %p" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
 	                
 	                ),
