@@ -13,15 +13,14 @@ if [ $argv = '1' ]; then
 else
 	screen -AmdS nohub python sni.py 
 fi
-echo -e "${YELLOW}---logs----${SCOLOR}"
-
+sleep 1
 screen -AmdS nohub python ssh.py 
+echo -e "${YELLOW}---logs----${SCOLOR}"
 sleep 5
 cat logs.txt
 cat sshlogs.txt
 
 var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
-
 if [ $var = 'SUCCESSFULLY' ];then 
 	echo -e "${GREEN}---Tunneling  starts-----"
 	chmod +x proxification
