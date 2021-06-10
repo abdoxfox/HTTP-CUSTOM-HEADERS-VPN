@@ -55,7 +55,7 @@ class sshRunn:
 					line = line.decode('utf-8',errors='ignore').lstrip(r'(debug1|Warning):').strip() + '\r'
 					self.logs(line)
 					if 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
-					elif 'Permission denied' in line:self.logs(R+'Access Denied'+GR)
+					elif 'Permission denied' in line:self.logs(R+'username or password are incorrect'+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed'+GR)
 					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs'+GR)
 			
