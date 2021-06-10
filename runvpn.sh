@@ -35,9 +35,9 @@ if [ "$var" = "SUCCESSFULLY" ];then
 	echo -e "${SCOLOR}"
 	
 else
-	echo -e "${RED}something wrong with your settings"
-	echo -e "check settings.ini file again ${SCOLOR}"
+	echo -e "${RED}failed! , check settings.ini file again ${SCOLOR}"
 fi
+
 echo -e "${RED} vpn service stopped" 
 python pidkill.py
 iptables --flush 
