@@ -21,7 +21,7 @@ cat logs.txt
 cat sshlogs.txt
 
 var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
-if [ $var = 'SUCCESSFULLY' ];then 
+if [ "$var" = "SUCCESSFULLY" ];then 
 	echo -e "${GREEN}---Tunneling  starts-----"
 	chmod +x proxification
 	./proxification > /dev/null
