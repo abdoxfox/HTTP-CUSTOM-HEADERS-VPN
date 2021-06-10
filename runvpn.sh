@@ -7,18 +7,25 @@ SCOLOR='\033[0m'
 
 argv=$1
 
-if [ $argv = '1' ]; then 
+if [ "$argv" = '1' ]; then 
 	screen -AmdS nohub python http_direct_injector.py
 	
 else
+	echo "${GREEN}Default mode is sni \n to use payload choice type : \n./runvpn.sh 1${SCOLOR}"
 	screen -AmdS nohub python sni.py 
 fi
 sleep 1
 screen -AmdS nohub python ssh.py 
 echo -e "${YELLOW}---logs----${SCOLOR}"
 sleep 5
-cat logs.txt
-cat sshlogs.txt
+
+sshlog="sshlogs.txt"
+if [ -f "$sshlog" ]; then 
+	cat sshlogs.txt
+else
+	echo "${RED}try agin ${SCOLOR}"
+	exit
+fi
 
 var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
 if [ "$var" = "SUCCESSFULLY" ];then 
