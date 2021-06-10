@@ -40,7 +40,7 @@ class injector:
 	    
 	def killpid(self):
 		self.logs('killing process ...')
-		cmd = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE,stderr=subprocess.SDOUT)
+		cmd = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
 		output, error = cmd.communicate()
 		target_process = "python"
 		for line in output.splitlines():
@@ -64,7 +64,7 @@ class injector:
 		payload = payload.replace('[netData]','CONNECT '+host+':'+host +' HTTP/1.0')
 		payload = payload.replace('[realData]','CONNECT '+host+':'+host+' HTTP/1.0')	
 		payload = payload.replace('[split_delay]','[delay_split]')
-		payload = payload.replace('[instant_split]','[instant_split]')
+		payload = payload.replace('[split_instant]','[instant_split]')
 		payload = payload.replace('[method]','CONNECT')
 		payload = payload.replace('mip','127.0.0.1')
 		payload = payload.replace('[ssh]',host+':'+port)
