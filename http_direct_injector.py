@@ -59,10 +59,10 @@ class injector:
 		payload = payload.replace('[lf]','\n')
 		payload = payload.replace('[protocol]','HTTP/1.0')
 		payload = payload.replace('[ua]','Dalvik/2.1.0')  
-		payload = payload.replace('[raw]','CONNECT '+host+':'+host+' HTTP/1.0\r\n\r\n')
-		payload = payload.replace('[real_raw]','CONNECT '+host+':'+host+' HTTP/1.0\r\n\r\n') 
-		payload = payload.replace('[netData]','CONNECT '+host+':'+host +' HTTP/1.0')
-		payload = payload.replace('[realData]','CONNECT '+host+':'+host+' HTTP/1.0')	
+		payload = payload.replace('[raw]','CONNECT '+host+':'+port+' HTTP/1.0\r\n\r\n')
+		payload = payload.replace('[real_raw]','CONNECT '+host+':'+port+' HTTP/1.0\r\n\r\n') 
+		payload = payload.replace('[netData]','CONNECT '+host+':'+port +' HTTP/1.0')
+		payload = payload.replace('[realData]','CONNECT '+host+':'+port+' HTTP/1.0')	
 		payload = payload.replace('[split_delay]','[delay_split]')
 		payload = payload.replace('[split_instant]','[instant_split]')
 		payload = payload.replace('[method]','CONNECT')
@@ -87,8 +87,8 @@ class injector:
 	        except ValueError:
 	        	proxip = host
 	        	proxport = port
-	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	        s.connect((str(proxip), int(proxport)))
+	        #s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	        socket.createconnect((str(proxip), int(proxport)))
 	        self.logs(f'{G}connected to  proxy {proxip}:{proxport}{GR}')
 	        payload = self.payloadformating(self.getpayload(self.conf()),host,port)
 	        if payload :
