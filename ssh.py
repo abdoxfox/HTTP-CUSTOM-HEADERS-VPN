@@ -45,9 +45,10 @@ class sshRunn:
 					nc_proxy = nc_proxies_mode[0]
 				else:
 					nc_proxy = nc_proxies_mode[1]
+				nc = socket.create_connection(('127.0.0.1','9092'))
 				response = subprocess.Popen(
 	                (
-	                   f'sshpass -p {password} ssh -o "ProxyCommand={nc_proxy}" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+	                   f'sshpass -p {password} ssh -o "ProxyCommand={nc.send(payload)}" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
 	                
 	                ),
