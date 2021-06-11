@@ -169,7 +169,8 @@ class injector:
 	                        else:
 	                            
 	                            s.send(data)
-	                    except:
+	                    except Exception as e:
+				self.logs(f'Error : {e}')
 	                        connected = False
 	                        break
 	        client.close()
