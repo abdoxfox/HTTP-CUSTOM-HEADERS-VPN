@@ -39,7 +39,7 @@ class sshRunn:
 				           soc.sendall(payload)
 				    else:
 				    	self.logs(e)
-				nc_proxies_mode = ['corckscrew {inject_host} {inject_port} %h %p', 'nc -X CONNECT -x {inject_host}:{inject_port} %h %p']
+				nc_proxies_mode = ['corkscrew {inject_host} {inject_port} %h %p', 'nc -X CONNECT -x {inject_host}:{inject_port} %h %p']
 				arg = str(sys.argv[1])
 				if arg == '1':
 					nc_proxy = nc_proxies_mode[0]
