@@ -68,7 +68,7 @@ class sshRunn:
 		try:    								
 		    soc = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		    soc.connect((self.inject_host,int(self.inject_port)))
-		    thread=threading.Thread(target=self.ssh_client,args=('1080',host,port,user,password))
+		    thread=threading.Thread(target=self.ssh_client,args=('1082',host,port,user,password))
 		    thread.start()
 		except ConnectionRefusedError:            
 		    self.logs(R+'try run again again'+GR)
