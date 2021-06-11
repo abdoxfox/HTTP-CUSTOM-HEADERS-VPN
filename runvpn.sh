@@ -9,16 +9,19 @@ argv=$1
 
 if [ "$argv" = '1' ]; then 
 	screen -AmdS nohub python http_direct_injector.py
+	sleep 3
+	screen -AmdS nohub python ssh.py 1
 	
 else
 	echo -e "${GREEN}Default mode is sni \n to use payload choice type : \n./runvpn.sh 1${SCOLOR}"
 	screen -AmdS nohub python sni.py 
+	sleep 3
+	screen -AmdS nohub python ssh.py 2
 fi
-sleep 3
-screen -AmdS nohub python ssh.py 
-echo -e "${YELLOW}---logs----${SCOLOR}"
-sleep 15
 
+echo -e "${YELLOW}---logs----${SCOLOR}"
+
+sleep 15
 sshlog="sshlogs.txt"
 if [ -f "$sshlog" ]; then 
 	cat sshlogs.txt
