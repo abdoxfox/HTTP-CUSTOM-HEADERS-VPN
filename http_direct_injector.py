@@ -151,8 +151,6 @@ class injector:
 	          status = s.recv(1024).split('\n'.encode())[0]
 	          self.logs(f'status :{G} {status.decode()}{GR}' )
 	        client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
-	        status = s.recv(1024).split('\n'.encode())[0]
-	        self.logs(f'{G}status : {status.decode()}{GR}' )
 	        connected = True
 	        while connected == True:
 	                r, w, x = select.select([client,s], [], [client,s],3)
