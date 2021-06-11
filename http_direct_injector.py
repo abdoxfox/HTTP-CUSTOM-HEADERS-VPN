@@ -46,7 +46,7 @@ class injector:
                 for line in output.splitlines():
                     if target_process in str(line):
                         pid = int(line.split(None, 1)[0])
-                        os.system('kill pid '+str(pid))
+                        os.system('kill '+str(pid))
 
 
 
