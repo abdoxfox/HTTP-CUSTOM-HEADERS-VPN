@@ -71,7 +71,7 @@ class sshRunn:
 		    thread=threading.Thread(target=self.ssh_client,args=('1080',host,port,user,password))
 		    thread.start()
 		except ConnectionRefusedError:            
-		    self.logs(R+' <!> Run client.py first in a new tab\n\tthen try again'+GR)
+		    self.logs(R+'try run again again'+GR)
 		    soc.close()
 		      
 		except KeyboardInterrupt:
