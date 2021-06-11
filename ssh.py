@@ -39,7 +39,7 @@ class sshRunn:
 				           soc.sendall(payload)
 				    else:
 				    	self.logs(e)
-				nc_proxies_mode = ['ncat --proxy-type http --proxy', 'nc -X CONNECT -x']
+				nc_proxies_mode = ['corckscrew {inject_host} {inject_port} %h %p', 'nc -X CONNECT -x {inject_host}:{inject_port} %h %p']
 				arg = str(sys.argv[1])
 				if arg == '1':
 					nc_proxy = nc_proxies_mode[0]
@@ -47,7 +47,7 @@ class sshRunn:
 					nc_proxy = nc_proxies_mode[1]
 				response = subprocess.Popen(
 	                (
-	                   f'sshpass -p {password} ssh -o "ProxyCommand={nc_proxy} {inject_host}:{inject_port} %h %p" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+	                   f'sshpass -p {password} ssh -o "ProxyCommand={nc_proxy}" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
 	                
 	                ),
