@@ -17,7 +17,7 @@ fi
 sleep 1
 screen -AmdS nohub python ssh.py 
 echo -e "${YELLOW}---logs----${SCOLOR}"
-sleep 5
+sleep 10
 
 sshlog="sshlogs.txt"
 if [ -f "$sshlog" ]; then 
