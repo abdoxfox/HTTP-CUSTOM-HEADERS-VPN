@@ -170,9 +170,8 @@ class injector:
 	                            
 	                            s.send(data)
 	                    except Exception as e:
-				self.logs(f'Error : {e}')
-	                        connected = False
-	                        break
+	                    	self.logs(f'Error : {e}')
+	                    	connected = False;break
 	        client.close()
 	        s.close()
 	        self.logs(R+'<#> Client {} Disconnected {}'.format(address[-1],GR))
