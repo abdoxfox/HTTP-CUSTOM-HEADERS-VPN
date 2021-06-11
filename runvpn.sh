@@ -14,10 +14,10 @@ else
 	echo -e "${GREEN}Default mode is sni \n to use payload choice type : \n./runvpn.sh 1${SCOLOR}"
 	screen -AmdS nohub python sni.py 
 fi
-sleep 1
+sleep 3
 screen -AmdS nohub python ssh.py 
 echo -e "${YELLOW}---logs----${SCOLOR}"
-sleep 10
+sleep 15
 
 sshlog="sshlogs.txt"
 if [ -f "$sshlog" ]; then 
