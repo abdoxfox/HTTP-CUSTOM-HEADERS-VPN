@@ -31,14 +31,6 @@ class sshRunn:
 				password = password 
 				inject_host= self.inject_host
 				inject_port= self.inject_port
-				payload=f'CONNECT {host}:{port} HTTP/1.1\r\n\r\n'.encode()
-				try:
-				    soc.send(payload)   
-				except Exception as e:
-				    while e == '[Errno 9] Bad file descriptor':
-				           soc.sendall(payload)
-				    else:
-				    	self.logs(e)
 				nc_proxies_mode = [f'corkscrew {inject_host} {inject_port} %h %p', f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p']
 				arg = str(sys.argv[1])
 				if arg == '1':
