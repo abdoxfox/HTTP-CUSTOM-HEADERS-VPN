@@ -11,7 +11,7 @@ if [ "$argv" = '1' ]; then
 	screen -AmdS nohub python http_direct_injector.py
 	
 else
-	echo "${GREEN}Default mode is sni \n to use payload choice type : \n./runvpn.sh 1${SCOLOR}"
+	echo -e "${GREEN}Default mode is sni \n to use payload choice type : \n./runvpn.sh 1${SCOLOR}"
 	screen -AmdS nohub python sni.py 
 fi
 sleep 1
