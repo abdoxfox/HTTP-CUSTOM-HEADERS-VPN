@@ -85,8 +85,8 @@ class injector:
 	        except ValueError:
 	        	proxip = host
 	        	proxport = port
-	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	        s.connect((str(proxip), int(proxport)))
+	        #s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	        s = socket.create_connection((str(proxip), int(proxport)))
 	        self.logs(f'{G}connected to  proxy {proxip}:{proxport}{GR}')
 	        payload = self.payloadformating(self.getpayload(self.conf()),host,port)
 	        if payload :
@@ -146,11 +146,12 @@ class injector:
 	        else:
 	          
 	          s.send(payload.encode())
-	        if self.auto_rep(self.conf()) == '1':
+	        if self.auto_rep(self.conf()) =='1':
 	        	status = s.recv(1024).split('\n'.encode())[0]
 	        else:
 	        	pass
-	        client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
+	        client.send(b"HTTP/1.0 200 Connection Established\r\n\r\n")
+	        
 	        connected = True
 	        while connected == True:
 	                r, w, x = select.select([client,s], [], [client,s],3)
@@ -159,7 +160,7 @@ class injector:
 	                for i in r:
 	                    try:
 	                        
-	                        data = i.recv(19192)
+	                        data = i.recv(1024)
 	                        if not data: connected = False; break
 	                        if i is s:
 	                  
