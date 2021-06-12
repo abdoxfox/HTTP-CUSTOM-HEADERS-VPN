@@ -66,6 +66,12 @@ class sshRunn:
 		try:    								
 		    soc = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		    soc.connect((self.inject_host,int(self.inject_port)))
+		    regx = r'[a-zA-Z0-9_]'
+		    if re.match(regx,host):
+		    	try:
+		    		ip = socket.gethostbyname(host)
+		    	except:
+		    		ip = host
 		    thread=threading.Thread(target=self.ssh_client,args=('1080',host,port,user,password))
 		    thread.start()
 		except ConnectionRefusedError:            
