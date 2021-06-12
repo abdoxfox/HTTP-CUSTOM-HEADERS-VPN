@@ -146,7 +146,7 @@ class injector:
 	        else:
 	          
 	          s.send(payload.encode())
-	        if self.auto_rep(self.conf()) == 1:
+	        if self.auto_rep(self.conf()) == '1':
 	        	status = s.recv(1024).split('\n'.encode())[0]
 	        else:
 	        	pass
