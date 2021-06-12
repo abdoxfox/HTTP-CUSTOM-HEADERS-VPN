@@ -11,9 +11,14 @@ http ssl ssh tunneling vpn for android and linux devices
 
 past your data into file settings.ini 
 
-![image](https://user-images.githubusercontent.com/46646744/120905618-2c1ee080-c64b-11eb-9ce8-fcc24da98004.png)
+![image](https://user-images.githubusercontent.com/46646744/121788894-356af880-cbc9-11eb-81b6-856675bad994.png)
 
 note : if are using Direct ssh leave the first part of settings.ini file empty you have only to setup your ssh settings
+
+note 2 : if not woks in defaul auto_replace value , update it to auto_replace = 1 in file settings.ini
+
+![image](https://user-images.githubusercontent.com/46646744/121788947-9bf01680-cbc9-11eb-8b84-4682f58d1387.png)
+
 
 # how it works!
 
