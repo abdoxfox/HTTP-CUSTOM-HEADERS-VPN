@@ -21,7 +21,7 @@ fi
 
 echo -e "${YELLOW}---logs----${SCOLOR}"
 
-sleep 15
+sleep 10
 cat logs.txt
 sshlog="sshlogs.txt"
 if [ -f "$sshlog" ]; then 
