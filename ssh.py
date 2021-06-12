@@ -1,11 +1,9 @@
 import subprocess
 import socket
-import select
 import threading
 import random
 import time
 import sys,os
-import platform
 import configparser
 
 # colors
