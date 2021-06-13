@@ -5,6 +5,7 @@ import random
 import time
 import sys,os
 import configparser
+import re 
 
 # colors
 bg=''
@@ -19,12 +20,10 @@ class sshRunn:
 		self.inject_port = inject_port
 
 	def ssh_client(self,socks5_port,host,port,user,password):
-			try:
-				
+			try:				
 				dynamic_port_forwarding = '-CND {}'.format(socks5_port)
 				host = host 
-				port = port
-				
+				port = port	
 				username = user 
 				password = password 
 				inject_host= self.inject_host
