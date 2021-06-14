@@ -24,7 +24,6 @@ class sshRunn:
 				dynamic_port_forwarding = '-CND {}'.format(socks5_port)
 				host = host 
 				port = port
-				
 				username = user 
 				password = password 
 				inject_host= self.inject_host
