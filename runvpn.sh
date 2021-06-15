@@ -27,7 +27,9 @@ sshlog="sshlogs.txt"
 if [ -f "$sshlog" ]; then 
 	cat sshlogs.txt
 else
-	echo "${RED}try agin ${SCOLOR}"
+	echo "${RED}Not connected ${SCOLOR}"
+	screen -AmdS nohub python pidkill.py
+	rm logs.txt
 	exit
 fi
 
@@ -36,6 +38,7 @@ if [ "$var" = "SUCCESSFULLY" ];then
 	echo -e "${GREEN}---Tunneling  starts-----"
 	chmod +x proxification
 	./proxification > /dev/null
+	iptables --flush 
 	echo -e "${SCOLOR}"
 	
 else
@@ -44,7 +47,6 @@ fi
 
 echo -e "${RED} vpn service stopped" 
 python pidkill.py
-iptables --flush 
 rm logs.txt
 rm sshlogs.txt
 echo -e "exiting ${SCOLOR}"
