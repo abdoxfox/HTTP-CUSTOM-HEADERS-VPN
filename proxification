@@ -11,8 +11,8 @@ iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8123
 iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8124
 
 # socksify only DNS UDP traffic
-iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8123
-iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8124
+iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8125
+iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8126
 
 
 trap "iptables -w -t nat -D OUTPUT -j PROXY; iptables -w -t nat -F PROXY; iptables -w -t nat -X PROXY" EXIT
