@@ -7,7 +7,7 @@ def handler():
     target_process = "python"
     for line in output.splitlines():
         if target_process in str(line):
-            pid = int(line.split(None, 1)[0])
+            pid = int(line.split()[0])
             os.system(f'kill {pid}')
 
 handler()
