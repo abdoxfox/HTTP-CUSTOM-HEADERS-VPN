@@ -1,6 +1,10 @@
 # http-ssl-ssh-tunneling
 http ssl ssh tunneling vpn for android and linux devices
 
+# whats new!
+
+* Now support combination ssl + payload 
+
 # packages :
 
 [+] - apt install -y git python openssh sshpass netcat-openbsd corkscrew
@@ -11,11 +15,9 @@ http ssl ssh tunneling vpn for android and linux devices
 
 past your data into file settings.ini 
 
-![image](https://user-images.githubusercontent.com/46646744/121788894-356af880-cbc9-11eb-81b6-856675bad994.png)
+![image](https://user-images.githubusercontent.com/46646744/122469251-9f621400-cfb4-11eb-9d64-f5dbfa2dffa9.png)
 
-note : if are using Direct ssh leave the first part of settings.ini file empty you have only to setup your ssh settings
-
-note 2 : if not woks in defaul auto_replace value , update it to auto_replace = 1 in file settings.ini
+* note : if not woks in defaul auto_replace value , update it to auto_replace = 1 in file settings.ini
 
 ![image](https://user-images.githubusercontent.com/46646744/121788947-9bf01680-cbc9-11eb-8b84-4682f58d1387.png)
 
@@ -26,9 +28,9 @@ note 2 : if not woks in defaul auto_replace value , update it to auto_replace = 
 
 [+] - git clone https://github.com/abdoxfox/http-ssl-ssh-injector.git
 
-# if you will use custom payload or direct ssh connection :
+# steps :
 
-* setup yor custom payload and proxy (if need it  else leave it empty) and ssh details in settings.ini file.
+* setup your custom payload and proxy (proxy not required)
 
 [+] - cd http-ssl-ssh-injector
 
@@ -36,19 +38,11 @@ note 2 : if not woks in defaul auto_replace value , update it to auto_replace = 
 
 [+] - chmod +x runvpn.sh
 
-[+] - ./runvpn.sh 1          (argument 1 means that you will use payload / direct ssh connection)
+[+] - ./runvpn.sh
 
- # if are using ssl (sni bughost )
+* choose your connection mode:
 
-* setup your sni bughost and ssh details in settings.ini file and run the following commands :
-
-[+] - cd http-ssl-ssh-injector
-
-[+] - sudo or tsu 
-
-[+] - chmod +x runvpn.sh
-
-[+] - ./runvpn.sh 2         (argument 2 means that you will use ssl  method )
+![image](https://user-images.githubusercontent.com/46646744/122469828-48a90a00-cfb5-11eb-8b2b-48e9870618b2.png)
 
 
 # screenshots 
