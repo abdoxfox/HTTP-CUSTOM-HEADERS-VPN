@@ -5,14 +5,19 @@ iptables -w -t nat -I OUTPUT -j PROXY
 # exclude local traffic, see: http://manpages.org/ss-redir
 iptables -w -t nat -A PROXY -d 127.0.0.0/8 -j RETURN
 iptables -w -t nat -A PROXY -d 192.168.0.0/16 -j RETURN
-
+iptables -t nat -A PROXY -d 0.0.0.0/8 -j RETURN
+iptables -w -t nat -A PROXY -d 10.0.0.0/8 -j RETURN
+iptables -w -t nat -A PROXY -d 169.254.0.0/16 -j RETURN
+iptables -w -t nat -A PROXY -d 172.16.0.0/12 -j RETURN
+iptables -w -t nat -A PROXY -d 224.0.0.0/4 -j RETURN
+iptables -w -t nat -A PROXY  -d 240.0.0.0/4 -j RETURN
 # socksify whole TCP traffic
 iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8123
 iptables -w -t nat -A PROXY -p tcp -j DNAT --to 127.0.0.1:8124
 
 # socksify only DNS UDP traffic
 iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8125
-iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:8126
+iptables -w -t nat -A PROXY -p udp --dport 53 -j DNAT --to 127.0.0.1:7300
 
 
 trap "iptables -w -t nat -D OUTPUT -j PROXY; iptables -w -t nat -F PROXY; iptables -w -t nat -X PROXY" EXIT
