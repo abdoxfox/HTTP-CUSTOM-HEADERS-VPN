@@ -10,9 +10,12 @@ echo "0 - SSH Direct "
 echo "1 - PAYLOAD "
 echo "2 - SSL "
 echo -e "3 - SSL+PAYLOAD \nEnter choice number :${SCOLOR}"
+
 read  mode
 find=`cat settings.ini | grep "connection_mode = " |awk '{print $3}'`
+
 sed -i "s/connection_mode = $find/connection_mode = $mode/g" settings.ini
+
 sleep 1
 screen -AmdS nohub python tunnel.py
 sleep 1
@@ -25,7 +28,7 @@ elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		
 		screen -AmdS nohub python ssh.py 2
 else
-	echo 'wrong choice\ntry again'
+	echo -e "${RED}wrong choice\ntry again${SCOLOR}"
 	python pidkill.py
 	exit
 fi
@@ -33,17 +36,8 @@ echo -e "${YELLOW}---logs----${SCOLOR}"
 
 sleep 10
 cat logs.txt
-sshlog="sshlogs.txt"
-if [ -f "$sshlog" ]; then 
-	cat sshlogs.txt
-else
-	echo "${RED}try agin ${SCOLOR}"
-	python pidkill.py
-	rm logs.txt
-	exit
-fi
 
-var=`cat sshlogs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
+var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
 if [ "$var" = "SUCCESSFULLY" ];then 
 	echo -e "${GREEN}---Tunneling  starts-----"
 	chmod +x proxification
@@ -58,6 +52,6 @@ fi
 echo -e "${RED} vpn service stopped" 
 python pidkill.py 
 rm logs.txt
-rm sshlogs.txt
 echo -e "exiting ${SCOLOR}"
+
 
