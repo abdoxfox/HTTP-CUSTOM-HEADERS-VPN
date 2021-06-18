@@ -65,9 +65,8 @@ class Tun(injector):
 	        except ValueError:
 	        	proxip = host
 	        	proxport = port
-	        (soc_f,soc_t,proto,_,add) = socket.getaddrinfo(proxip,proxport)[0]
-	        s = socket.socket(soc_f,soc_t,proto)
-	        s.connect(add)
+	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	        s.connect((proxip,proxport))
 	        self.logs(f'{G}connected to {add[0]}:{add[1]}{GR}')
 	        if int(self.conn_mode(self.conf())) == 2:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
