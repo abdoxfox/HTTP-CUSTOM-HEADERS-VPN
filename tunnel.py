@@ -67,7 +67,7 @@ class Tun(injector):
 	        	proxport = port
 	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	        s.connect((proxip,proxport))
-	        self.logs(f'{G}connected to {add[0]}:{add[1]}{GR}')
+	        self.logs(f'{G}connected to {proxip}:{proxport}{GR}')
 	        if int(self.conn_mode(self.conf())) == 2:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
@@ -77,9 +77,9 @@ class Tun(injector):
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
 	        	s = ctx.wrap_socket(s, server_hostname=str(SNI_HOST))
-	        	injector.connection(self,client, s,str(add[0]),str(add[1]))
+	        	injector.connection(self,client, s,str(host),str(port))
 	        else:
-	        	injector.connection(self,client, s,str(add[0]),str(add[1]))
+	        	injector.connection(self,client, s,str(host),str(port))
 
 
 	        self.tunneling(client,s)
