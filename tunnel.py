@@ -38,7 +38,6 @@ class Tun(injector):
 		connected = True
 		while connected == True:
 			r, w, x = select.select([client,sockt], [], [client,sockt],3)
-			print(r)
 			if x: connected = False; break
 			for i in r:
 				try:
