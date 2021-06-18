@@ -85,7 +85,7 @@ class sshRunn:
 
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
-		logfile = open('sshlogs.txt','a')
+		logfile = open('logs.txt','a')
 		logfile.write(f'[{logtime}] : {str(log)}\n')
 if __name__=='__main__':		        
 	
