@@ -13,8 +13,7 @@ R = bg+'\033[31m'
 
 class injector:
 	def __init__(self):
-		self.LISTEN_PORT = '9092'	
-		self.localip = '127.0.0.1'
+		pass
 
 	def conf(self):
 		config = configparser.ConfigParser()
