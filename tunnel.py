@@ -65,7 +65,7 @@ class Tun(injector):
 	        	proxip = host
 	        	proxport = port
 	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	        s.connect((proxip,proxport))
+	        s.connect((proxip,int(proxport)))
 	        self.logs(f'{G}connected to {proxip}:{proxport}{GR}')
 	        if int(self.conn_mode(self.conf())) == 2:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
