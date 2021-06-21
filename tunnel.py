@@ -71,7 +71,7 @@ class Tun(injector):
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
 	        	s = ctx.wrap_socket(s, server_hostname=str(SNI_HOST))
-	        	
+	        	client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
 	        elif int(self.conn_mode(self.conf())) == 3:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
