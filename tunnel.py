@@ -69,13 +69,17 @@ class Tun(injector):
 	        self.logs(f'{G}connected to {proxip}:{proxport}{GR}')
 	        if int(self.conn_mode(self.conf())) == 2:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
-	        	ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
-	        	s = ctx.wrap_socket(s, server_hostname=str(SNI_HOST))
+	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+	        	s = context.wrap_socket(s,server_hostname=str(SNI_HOST))
+	        	self.logs(f'Handshaked successfully to {SNI_HOST}')
+	        	self.logs(f"protocol : {context.get_ciphers()[0]['protocol']}")
 	        	client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
 	        elif int(self.conn_mode(self.conf())) == 3:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
-	        	ctx = ssl.SSLContext(ssl.PROTOCOL_TLS)
-	        	s = ctx.wrap_socket(s, server_hostname=str(SNI_HOST))
+	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+	        	s = context.wrap_socket(s,server_hostname=str(SNI_HOST))
+	        	self.logs(f'Handshaked successfully to {SNI_HOST}')
+	        	self.logs(f"protocol : {context.get_ciphers()[0]['protocol']}")
 	        	injector.connection(self,client, s,str(host),str(port))
 	        else:
 	        	injector.connection(self,client, s,str(host),str(port))
