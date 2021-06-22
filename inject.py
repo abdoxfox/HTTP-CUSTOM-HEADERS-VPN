@@ -121,10 +121,14 @@ class injector:
 	          
 	          s.send(payload.encode())
 	        
-	        if self.auto_rep(self.conf()) =='1':
+	        if int(self.auto_rep(self.conf())) == 1 or int(self.auto_rep(self.conf())) == 2:
 	        	status = s.recv(1024).split('\n'.encode())[0]
-			self.logs(f'{G}{status.decode()}{GR}')
+	        	self.logs(status.decode())
+	       
 	        client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
+	        if int(self.auto_rep(self.conf())) == 2:
+	        	status = s.recv(1024).split('\n'.encode())[0]
+	        	self.logs(status.decode())
 	       
 	        
 	        
