@@ -65,12 +65,12 @@ class injector:
 
 	def connection(self,client, s,host,port):
 	        if int(self.conn_mode(self.conf())) == 0:
-	        	payload = f'CONNECT {host}:{port} HTTP/1.0'
+	        	payload = f'CONNECT {host}:{port} HTTP/1.0\r\n\r\n'
 	        else:
 	        	payload = self.payloadformating(self.getpayload(self.conf()),host,port)
 	        
 	        if '[split]' in payload or '[instant_split]' in payload or '[delay_split]' in payload:
-	          payload = payload.replace('[split]'        ,'||0.5||')
+	          payload = payload.replace('[split]'        ,'||1.0||')
 	          payload = payload.replace('[delay_split]'  ,'||1.5||')
 	          payload = payload.replace('[instant_split]','||0.0||')
 	          req = payload.split('||')
@@ -89,8 +89,8 @@ class injector:
 	          for element in req:
 	            if element and element == '1' :pass
 	            else:payl.append(element)
-	          s.send(payl[0].encode())
-	          s.send(payl[0].encode())
+	          rpspli = payl[0]+payl[0]
+	          s.send(rpspli.encode())
 	          s.send(payl[1].encode())
 
 	        elif '[reverse_split]' in payload or '[x-split]' in payload:
@@ -101,8 +101,8 @@ class injector:
 	          for element in req:
 	            if element and element == '2':pass
 	            else:payl.append(element)
-	          s.send(payl[0].encode())
-	          s.send(payl[1].encode())
+	          rvsplit = payl[0]+payl[1]
+	          s.send(rvsplit.encode())
 	          s.send(payl[1].encode())
 
 	        elif '[split-x]' in payload:
@@ -112,19 +112,18 @@ class injector:
 	          for element in req:
 	            if element and element == '3':pass
 	            else:xsplit.append(element)
-	          s.send(xsplit[0].encode())
+	          alpay = xsplit[0]+xsplit[1]
+	          s.send(alpay.encode())
+	          
+	          time.sleep(1.0)
 	          s.send(xsplit[1].encode())
-	          time.sleep(0.5)
-	          s.send(xsplit[1].encode())
-
 	        else:
 	          
 	          s.send(payload.encode())
 	        
 	        if self.auto_rep(self.conf()) =='1':
 	        	status = s.recv(1024).split('\n'.encode())[0]
-	        else:
-	        	pass
+			self.logs(f'{G}{status.decode()}{GR}')
 	        client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
 	       
 	        
