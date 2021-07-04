@@ -27,19 +27,19 @@ echo -e " ${SCOLOR}"
 }
 
 function connect() {
-	screen -AmdS nohub python tunnel.py
+	screen -AmdS nohub python3 tunnel.py
 	sleep 1
 	if [ "$mode" = '0' ] || [ "$mode" = '1' ]
 	then
 
-		screen -AmdS nohub python ssh.py 1
+		screen -AmdS nohub python3 ssh.py 1
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
 			
-			screen -AmdS nohub python ssh.py 2
+			screen -AmdS nohub python3 ssh.py 2
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
-		python pidkill.py
+		python3 pidkill.py
 		exit
 	fi
 
