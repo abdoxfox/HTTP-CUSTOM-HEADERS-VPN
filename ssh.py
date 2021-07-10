@@ -66,8 +66,6 @@ class sshRunn:
 	def create_connection(self,host,port,user,password):
 		global soc , payload
 		try:    								
-		    soc = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		    soc.connect((self.inject_host,int(self.inject_port)))
 		    regx = r'[a-zA-Z0-9_]'
 		    if re.match(regx,host):
 		    	try:
