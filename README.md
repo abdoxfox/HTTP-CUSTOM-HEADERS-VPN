@@ -1,7 +1,6 @@
-# update comming soon :v
+# updated 
+waiting for your opinions 
 
-
-Waiting for some free time xd
 # http-ssl-ssh-tunneling
 http ssl ssh tunneling vpn for android and linux devices
 
