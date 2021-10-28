@@ -45,7 +45,7 @@ function connect() {
 
 	echo -e "${YELLOW}---logs----${SCOLOR}"
 
-	sleep 10
+	sleep 5
 	cat logs.txt
 
 	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
@@ -68,21 +68,8 @@ do
 	echo -e "${GREEN}"
 	read -p "reconnect ? [y\n] " reconnect
 	if [ "$reconnect" = 'y' ]  || [ "$reconnect" = 'Y' ]
-	then 
-		read -p "do yo want changing auto replace value [y\n]" auto_replace
-		if [ "$auto_replace" = 'y' ]  || [ "$auto_replace" = 'Y' ]
-		then
-			value=`cat settings.ini | grep "auto_replace ="| awk '{print $3}'`
-			echo "0 - for payload that doesn't send HTTP RESPONSE"
-			echo "1 - for payload that send one HTTP RESPONSE"
-			echo "2 - for payload that send double HTTP RESPONSE"
-			read -p "Enter your sutable choice : " choice 
-
-			sed -i "s/auto_replace = $value/auto_replace = $choice/g" settings.ini
-		 else
-		 	echo ''
-		 fi
-		echo -e "reconnecting ${SCOLOR}"
+	then
+          echo -e "reconnecting ${SCOLOR}"
 
 		connect
 	else 
