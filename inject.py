@@ -120,18 +120,21 @@ class injector:
 	        else:
 	          
 	          s.send(payload.encode())
-	        
-	        if int(self.auto_rep(self.conf())) == 1 or int(self.auto_rep(self.conf())) == 2:
-	        	status = s.recv(1024).split('\n'.encode())[0]
-	        	self.logs(status.decode())
-	       
-	        client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
-	        if int(self.auto_rep(self.conf())) == 2:
-	        	status = s.recv(1024).split('\n'.encode())[0]
-	        	self.logs(status.decode())
-	       
-	        
-	        
+	        self.get_resp(s,client)
+	def get_resp(self,server,client) :
+		packet = server.recv(1024)
+		res = packet.decode('utf-8','ignore')
+		status = res.split('\n')[0]
+		if status.split('-')[0]=='SSH':
+			print(f'{O}response : {G}{status}{GR}')
+			client.send(packet)
+			return True
+		else:
+			if status:
+				self.logs(f'{O}response : {G}{status}{GR}')
+				client.send(b'HTTP/1.1 200 Connection Established\r\n\r\n')
+				return self.get_resp(server,client)
+		
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
 		logfile = open('logs.txt','a')

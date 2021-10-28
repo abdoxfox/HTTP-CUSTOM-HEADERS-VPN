@@ -4,7 +4,7 @@ import select
 import threading
 from inject import injector
 import configparser
-import ssl
+import ssl,os,certifi
 
 bg=''
 G = bg+'\033[32m'
@@ -71,15 +71,29 @@ class Tun(injector):
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
 	        	s = context.wrap_socket(s,server_hostname=str(SNI_HOST))
+	        	context.verify_mode  = ssl.CERT_REQUIRED
+	        	context.load_verify_locations(
+	        	cafile=os.path.relpath(certifi.where()),
+	        	capath=None,cadata=None)
 	        	self.logs(f'Handshaked successfully to {SNI_HOST}')
-	        	self.logs(f"protocol : {context.get_ciphers()[0]['protocol']}")
+	        	try:
+	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} C={s.getpeercert()["subject"][1][0][1]}, ST={s.getpeercert()["subject"][1][0][1]} , L={s.getpeercert()["subject"][2][0][1]} , O={s.getpeercert()["subject"][3][0][1]} , CN={s.getpeercert()["subject"][4][0][1]}  {GR}''')
+	        	except:
+	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} {s.getpeercert()["subject"]}''')
 	        	client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
 	        elif int(self.conn_mode(self.conf())) == 3:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
 	        	s = context.wrap_socket(s,server_hostname=str(SNI_HOST))
+	        	context.verify_mode  = ssl.CERT_REQUIRED
+	        	context.load_verify_locations(
+	        	cafile=os.path.relpath(certifi.where()),
+	        	capath=None,cadata=None)
 	        	self.logs(f'Handshaked successfully to {SNI_HOST}')
-	        	self.logs(f"protocol : {context.get_ciphers()[0]['protocol']}")
+	        	try:
+	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} C={s.getpeercert()["subject"][1][0][1]}, ST={s.getpeercert()["subject"][1][0][1]} , L={s.getpeercert()["subject"][2][0][1]} , O={s.getpeercert()["subject"][3][0][1]} , CN={s.getpeercert()["subject"][4][0][1]}  {GR}''')
+	        	except:
+	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} {s.getpeercert()["subject"]}''')
 	        	injector.connection(self,client, s,str(host),str(port))
 	        else:
 	        	injector.connection(self,client, s,str(host),str(port))
