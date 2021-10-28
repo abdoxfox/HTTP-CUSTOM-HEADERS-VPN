@@ -126,7 +126,7 @@ class injector:
 		res = packet.decode('utf-8','ignore')
 		status = res.split('\n')[0]
 		if status.split('-')[0]=='SSH':
-			print(f'{O}response : {G}{status}{GR}')
+			self.logs(f'{O}response : {G}{status}{GR}')
 			client.send(packet)
 			return True
 		else:
