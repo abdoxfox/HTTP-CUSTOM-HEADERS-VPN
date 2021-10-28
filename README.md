@@ -11,6 +11,7 @@ http ssl ssh tunneling vpn for android and linux devices
 # packages :
 
 [+] - apt install -y git openssh sshpass netcat-openbsd corkscrew screen python3
+[+] - pip install certifi
 
 
 # configuration :
@@ -18,10 +19,6 @@ http ssl ssh tunneling vpn for android and linux devices
 past your data into file settings.ini 
 
 ![image](https://user-images.githubusercontent.com/46646744/122469251-9f621400-cfb4-11eb-9d64-f5dbfa2dffa9.png)
-
-* note : if not woks in defaul auto_replace value , update it to auto_replace = 1 in file settings.ini
-
-![image](https://user-images.githubusercontent.com/46646744/121788947-9bf01680-cbc9-11eb-8b84-4682f58d1387.png)
 
 
 # how it works!
