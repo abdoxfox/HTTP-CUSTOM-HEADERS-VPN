@@ -66,7 +66,7 @@ class Tun(injector):
 	        	proxport = port
 	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	        s.connect((proxip,int(proxport)))
-	        self.logs(f'{G}connected to {proxip}:{proxport}{GR}')
+	        self.logs(f'{O}[TCP] {G}connected to {proxip}:{proxport}{GR}')
 	        if int(self.conn_mode(self.conf())) == 2:
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
@@ -75,7 +75,7 @@ class Tun(injector):
 	        	context.load_verify_locations(
 	        	cafile=os.path.relpath(certifi.where()),
 	        	capath=None,cadata=None)
-	        	self.logs(f'Handshaked successfully to {SNI_HOST}')
+	        	self.logs(f'{O}[TCP] Handshaked successfully to {SNI_HOST}{GR}')
 	        	try:
 	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} C={s.getpeercert()["subject"][1][0][1]}, ST={s.getpeercert()["subject"][1][0][1]} , L={s.getpeercert()["subject"][2][0][1]} , O={s.getpeercert()["subject"][3][0][1]} , CN={s.getpeercert()["subject"][4][0][1]}  {GR}''')
 	        	except:
