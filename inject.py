@@ -41,6 +41,7 @@ class injector:
 
 
 	def payloadformating(self,payload,host,port):
+		self.logs(f'{O}[TCP] Sending payload :\n{payload}{GR}')
 		payload = payload.replace('[crlf]','\r\n')
 		payload = payload.replace('[crlf*2]','\r\n\r\n')
 		payload = payload.replace('[cr]','\r')
