@@ -4,7 +4,7 @@ import select
 import threading
 from inject import injector
 import configparser
-import ssl,os,certifi
+import ssl,os,certifi,sys
 
 bg=''
 G = bg+'\033[32m'
@@ -27,6 +27,9 @@ class Tun(injector):
 	def extraxt_sni(self,config):
 		sni = config['sni']['server_name']
 		return sni
+	def gethost(self,config):
+		host=config['ssh']['host']
+		return host
 	def proxy(self,config):
 	    proxyhost = config['config']['proxyip']
 	    proxyport = int(config['config']['proxyport'])
@@ -41,22 +44,23 @@ class Tun(injector):
 			if x: connected = False; break
 			for i in r:
 				try:
-					data = i.recv(8192)
+					data = i.recv(1024)
 					if not data: connected = False; break
 					if i is sockt:
 						client.send(data)
 					else:
 						sockt.send(data)
-				except:
+				except Exception as e:
+					self.logs(f'{R} {e}{GR}')
 					connected = False;break
 		client.close()
 		sockt.close()
-		self.logs(R+'Disconnected '+GR)
+		self.logs('Disconnected')
 	def destination(self,client, address):
 	    try:
 	        self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
 	        request = client.recv(9124).decode()
-	        host = request.split(':')[0].split()[-1]
+	        host = self.gethost(self.conf())
 	        port = request.split(':')[-1].split()[0]
 	        try:
 	            proxip=self.proxy(self.conf())[0] 
@@ -101,27 +105,22 @@ class Tun(injector):
 
 	        self.tunneling(client,s)
 	    except Exception as e:
-	    	self.logs(f'{G}{e}{GR}')
+	    	self.logs(f'{e}')
 	def create_connection(self):
 		try:
-		    sockt = socket.socket()
+		    sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		    sockt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		    sockt.bind(('', self.LISTEN_PORT))
 		    sockt.listen(0)
 		    
 		    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
-		except OSError:
-		    self.logs(O+'Port already used by another process\nRun script again'+GR)
-		    
-		    
-		    
-		while True:
-		    try:
+		    while True:
 		        client, address = sockt.accept()
 		        thr = threading.Thread(target=self.destination, args=(client, address))
 		        thr.start()
-		        
-		    except KeyboardInterrupt:
+		
+		except Exception as e:
+		        self.logs(e)
 		        sockt.close()
 		        
 		        

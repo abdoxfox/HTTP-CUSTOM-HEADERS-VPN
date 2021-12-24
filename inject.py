@@ -1,7 +1,7 @@
 import time
 import socket 
 import configparser
-
+import re
 
 bg=''
 G = bg+'\033[32m'
@@ -51,7 +51,7 @@ class injector:
 		payload = payload.replace('[raw]','CONNECT '+host+':'+port+' HTTP/1.0\r\n\r\n')
 		payload = payload.replace('[real_raw]','CONNECT '+host+':'+port+' HTTP/1.0\r\n\r\n') 
 		payload = payload.replace('[netData]','CONNECT '+host+':'+port +' HTTP/1.0')
-		payload = payload.replace('[realData]','CONNECT '+host+':'+port+' HTTP/1.0')	
+		payload = payload.replace('[realData]','CONNECT '+host+':'+port+' HTTP/1.0')               	
 		payload = payload.replace('[split_delay]','[delay_split]')
 		payload = payload.replace('[split_instant]','[instant_split]')
 		payload = payload.replace('[method]','CONNECT')
@@ -67,6 +67,7 @@ class injector:
 	def connection(self,client, s,host,port):
 	        if int(self.conn_mode(self.conf())) == 0:
 	        	payload = f'CONNECT {host}:{port} HTTP/1.0\r\n\r\n'
+	       
 	        else:
 	        	payload = self.payloadformating(self.getpayload(self.conf()),host,port)
 	        
@@ -74,9 +75,11 @@ class injector:
 	          payload = payload.replace('[split]'        ,'||1.0||')
 	          payload = payload.replace('[delay_split]'  ,'||1.5||')
 	          payload = payload.replace('[instant_split]','||0.0||')
+	          
 	          req = payload.split('||')
+	          
 	          for payl in req:
-	              if ('0.5' == payl or  '1.5' == payl or '0.0' == payl) :
+	              if payl in ['1.0','1.5','0.0'] :
 	                delay = payl
 	                time.sleep(float(delay))
 	              else:
@@ -131,10 +134,10 @@ class injector:
 			client.send(packet)
 			return True
 		else:
-			if status:
+			if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
 				self.logs(f'{O}response : {G}{status}{GR}')
-				client.send(b'HTTP/1.1 200 Connection Established\r\n\r\n')
-				return self.get_resp(server,client)
+			client.send(b'HTTP/1.1 200 Connection established\r\n\r\n')
+			return self.get_resp(server,client)
 		
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
