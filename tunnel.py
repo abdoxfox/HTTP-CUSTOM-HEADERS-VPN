@@ -11,6 +11,7 @@ G = bg+'\033[32m'
 O = bg+'\033[33m'
 GR = bg+'\033[37m'
 R = bg+'\033[31m'
+Buffer_lenght = 4096 * 4
 
 class Tun(injector):
 	def __init__(self):
@@ -44,7 +45,7 @@ class Tun(injector):
 			if x: connected = False; break
 			for i in r:
 				try:
-					data = i.recv(1024)
+					data = i.recv(Buffer_lenght)
 					if not data: connected = False; break
 					if i is sockt:
 						client.send(data)
