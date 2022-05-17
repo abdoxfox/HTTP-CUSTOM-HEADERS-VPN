@@ -54,6 +54,3 @@ past your data into file settings.ini
 ![image](https://user-images.githubusercontent.com/46646744/121225175-2c082600-c881-11eb-9c82-27fc2f4200a1.png)
 
 
-screenshots from : @megasniff_v2 (thanks a lot bro)
-
-
