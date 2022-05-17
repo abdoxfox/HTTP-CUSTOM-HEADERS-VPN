@@ -111,7 +111,7 @@ class Tun(injector):
 		try:
 		    sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		    sockt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		    sockt.bind(('', self.LISTEN_PORT))
+		    sockt.bind((socket.gethostbyname('localhost'), self.LISTEN_PORT))
 		    sockt.listen(0)
 		    
 		    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
