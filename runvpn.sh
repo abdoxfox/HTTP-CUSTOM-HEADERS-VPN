@@ -4,7 +4,18 @@ RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 SCOLOR='\033[0m'
-
+cat << EOF > redsocksSetup.sh
+if [ -f "redsocks/" ]   
+then 
+echo ""
+else
+git clone https://github.com/darkk/redsocks
+sleep 1
+cd redsocks 
+make
+fi
+EOF
+screen -dm bash redsocksSetup.sh
 
 echo -e "${GREEN}Choose Connection Method:"
 echo "0 - SSH Direct "
