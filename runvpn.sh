@@ -9,7 +9,7 @@ if [ -f "redsocks/" ]
 then 
 echo ""
 else
-unzip redsocks.zip redsock
+unzip redsocks.zip -d redsock
 cd redsocks 
 make
 fi
