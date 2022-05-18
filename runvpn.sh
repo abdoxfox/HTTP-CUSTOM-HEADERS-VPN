@@ -47,7 +47,7 @@ function connect() {
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
 			
-			screen -AmdS puthonwe python ssh.py 2 1080
+			screen -AmdS pythonwe python ssh.py 2 1080
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
 		python3 pidkill.py
