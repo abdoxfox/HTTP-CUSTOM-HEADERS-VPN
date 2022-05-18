@@ -9,13 +9,13 @@ if [ -f "redsocks/" ]
 then 
 echo ""
 else
-git clone https://github.com/darkk/redsocks
-sleep 1
+unzip redsocks.zip redsock
 cd redsocks 
 make
 fi
 EOF
 screen -dm bash redsocksSetup.sh
+rm redsocksSetup.sh
 
 echo -e "${GREEN}Choose Connection Method:"
 echo "0 - SSH Direct "
@@ -43,11 +43,11 @@ function connect() {
 	if [ "$mode" = '0' ] || [ "$mode" = '1' ]
 	then
 
-		screen -AmdS nohub python3 ssh.py 1
+		screen -AmdS nohub python3 ssh.py 1 1080
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
 			
-			screen -AmdS nohub python3 ssh.py 2
+			screen -AmdS puthonwe python ssh.py 2 1080
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
 		python3 pidkill.py
@@ -59,7 +59,7 @@ function connect() {
 	sleep 5
 	cat logs.txt
 
-	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $4}'`
+	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----"
 		chmod +x proxification
