@@ -28,22 +28,22 @@ class sshRunn:
 				password = password 
 				inject_host= self.inject_host
 				inject_port= self.inject_port
-				nc_proxies_mode = [f'corkscrew {inject_host} {inject_port} %h %p', f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p']
+				nc_proxies_mode = [f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p',f'corkscrew {inject_host} {inject_port} %h %p']
 				arg = str(sys.argv[1])
-				if arg == '1':
+				if arg == '2':
 					nc_proxy = nc_proxies_mode[0]
 				else:
 					nc_proxy = nc_proxies_mode[1]
 				response = subprocess.Popen(
-	                (
+				(
 	                   f'sshpass -p {password} ssh -o "ProxyCommand={nc_proxy}" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
-	                
-	                ),
+	              ),
 	                shell=True,
 	                stdout=subprocess.PIPE,
-	                stderr=subprocess.STDOUT)
-
+	             stderr=subprocess.STDOUT)
+	             
+	            
 				for line in response.stdout:
 					line = line.decode('utf-8',errors='ignore').lstrip(r'(debug1|Warning):').strip() + '\r'
 					if 'compat_banner: no match:' in line:
@@ -54,11 +54,15 @@ class sshRunn:
 					elif 'kex: server->client cipher:' in line:self.logs(line)
 					elif 'Next authentication method: password' in line:self.logs(G+'Authenticate to password'+GR)
 					elif 'Authentication succeeded (password).' in line:self.logs('Authentication Comleted')
-					elif 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
+					elif 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR);os.system('cat logs.txt')
 					elif 'Permission denied' in line:self.logs(R+'username or password are inncorect '+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed ' +GR)
-					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR)
-			
+					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR)		
+					elif 'client_loop: send disconnect: Broken pipe' in line:
+						while True:
+							self.main()
+					
+				
 			except KeyboardInterrupt:
 				sys.exit('stoping ..')
 
@@ -71,39 +75,30 @@ class sshRunn:
 		    	try:
 		    		ip = socket.gethostbyname(host)
 		    	except:
-		    		ip = host
-		    thread=threading.Thread(target=self.ssh_client,args=('1080',ip,port,user,password))
+		  		  ip = host
+		    sockslocalport  = 1080
+		    thread=threading.Thread(target=self.ssh_client,args=(sockslocalport,ip,port,user,password))
 		    thread.start()
-		except ConnectionRefusedError:            
-		    soc.close()
+		except ConnectionRefusedError:         
+		    pass
 		      
 		except KeyboardInterrupt:
-				self.logs(R+'ssh stopped'+GR)
-
+			self.logs(R+'ssh stopped'+GR)
 	def logs(self,log):
-		logtime = str(time.ctime()).split()[3]
-		logfile = open('logs.txt','a')
-		logfile.write(f'[{logtime}] : {str(log)}\n')
-if __name__=='__main__':		        
+	   		with open('logs.txt','a') as file:
+	   			file.write(log+'\n')
 	
-	
-	
-	start = sshRunn('127.0.0.1','9092')
-	config = configparser.ConfigParser()
-	try:
-		config.read_file(open('settings.ini'))
-	except Exception as e:
-		start.logs(f'{R}ERROR {e}')
-		sys.exit()
-	
-	host = config['ssh']['host'] 
-	port = config['ssh']['port']
-	user = config['ssh']['username']
-	password = config['ssh']['password']
-	if host:
-		start.create_connection(host,port,user,password)    
-	else:
-		start.logs(f'{R}ssh field is empty in file  settings.ini {GR}')
-		sys.exit
-	
+	def main(self):
+		config = configparser.ConfigParser()
+		config.read_file(open('settings.ini'))	
+		host = config['ssh']['host']
+		#'zn71jvguh6ottk56j-rogers.siteintercept.qualtrics.com'
+		port = config['ssh']['port']
+		user = config['ssh']['username']
+		password = config['ssh']['password']
+		self.create_connection(host,port,user,password)
+		
+start = sshRunn('127.0.0.1','9092')
+start.main()
+		
 
