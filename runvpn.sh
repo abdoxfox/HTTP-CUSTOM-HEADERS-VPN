@@ -9,12 +9,12 @@ if [ -f "redsocks/" ]
 then 
 echo ""
 else
-unzip redsocks.zip -d redsocks
+unzip redsocks
 cd redsocks 
 make
 fi
 EOF
-screen -dm bash redsocksSetup.sh
+bash redsocksSetup.sh
 rm redsocksSetup.sh
 
 echo -e "${GREEN}Choose Connection Method:"
