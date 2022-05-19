@@ -108,24 +108,29 @@ class Tun(injector):
 	    except Exception as e:
 	    	self.logs(f'{e}')
 	def create_connection(self):
-		try:
-		    sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		    sockt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-		    sockt.bind((socket.gethostbyname('localhost'), self.LISTEN_PORT))
-		    sockt.listen(0)
-		    
-		    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
-		    while True:
-		        client, address = sockt.accept()
-		        thr = threading.Thread(target=self.destination, args=(client, address))
-		        thr.start()
-		
-		except Exception as e:
-		        self.logs(e)
-		        sockt.close()
-		        
-		        
-		sockt.close()
+	    
+	    for res in socket.getaddrinfo(self.localip, self.LISTEN_PORT, socket.AF_UNSPEC,socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
+	        af, socktype, proto, canonname, sa = res
+	        try:
+	            sockt = socket.socket(af, socktype, proto)
+	        except OSError as msg:
+	            self.logs(str(msg))
+	            continue
+	        try:
+	           localAddress = socket.gethostbyname("localhost")
+	           sockt.bind((localAddress,self.LISTEN_PORT))
+	           sockt.listen(1)
+	        except OSError as msg:
+	            self.logs(str(msg))
+	            sockt.close()
+	        if sockt:
+	          pass
+	        self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
+	        while True:
+		            client, address = sockt.accept()
+		            thr = threading.Thread(target=self.destination, args=(client, address))
+		            thr.start()
+		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
 		logfile = open('logs.txt','a')
