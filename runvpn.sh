@@ -5,17 +5,23 @@ GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 SCOLOR='\033[0m'
 cat << EOF > redsocksSetup.sh
-if [ -f "redsocks/" ]   
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+SCOLOR='\033[0m'
+if [ -d "redsocks/" ]   
 then 
-echo ""
+echo "${GREEN}Redsocks installed ${SCOLOR}"
 else
-unzip redsocks
+echo -e "${GREEN} COMPILLING REDSOCKS BINARY ...${SCOLOR}"
+sleep 1
+unzip redsocks 
 cd redsocks 
 make
 fi
 EOF
-bash redsocksSetup.sh
-rm redsocksSetup.sh
+bash redsocksSetup.sh && rm redsocksSettup.sh
+clear
 
 echo -e "${GREEN}Choose Connection Method:"
 echo "0 - SSH Direct "
