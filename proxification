@@ -21,5 +21,7 @@ iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8124
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
 # run socksifier
-chmod +x /redsocks/redsocks
-./redsocks/redsocks -c redsocks.conf
+cd redsocks
+chmod +x redsocks
+
+sudo ./redsocks -c redsocks.conf 
