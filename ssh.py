@@ -58,10 +58,6 @@ class sshRunn:
 					elif 'Permission denied' in line:self.logs(R+'username or password are inncorect '+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed ' +GR)
 					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR)		
-					elif 'client_loop: send disconnect: Broken pipe' in line:
-						while True:
-							self.main()
-					
 				
 			except KeyboardInterrupt:
 				sys.exit('stoping ..')
