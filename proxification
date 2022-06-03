@@ -12,17 +12,11 @@ iptables -t nat -A PROXY -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A PROXY -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A PROXY  -d 240.0.0.0/4 -j RETURN
 
-#start downloading some traffic to fix the glitch
-curl -x "socks5://127.0.0.1:1080" -O -k http://speedtest.tele2.net/10MB.zip &
-sleep 0.5
 
 # socksify whole TCP traffic
 iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8123
 iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8124
 
-# socksify only DNS UDP traffic
-iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 7300
-iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 8125
 
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
