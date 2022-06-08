@@ -12,8 +12,6 @@ iptables -t nat -A PROXY -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A PROXY -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A PROXY  -d 240.0.0.0/4 -j RETURN
 
-#start downloading some traffic to fix the glitch
-
 # socksify whole TCP traffic
 iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8123
 iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8124
