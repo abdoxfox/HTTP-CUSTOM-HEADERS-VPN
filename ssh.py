@@ -34,9 +34,12 @@ class sshRunn:
 					nc_proxy = nc_proxies_mode[0]
 				else:
 					nc_proxy = nc_proxies_mode[1]
+				if self.enableCompress=='y':
+					      compress = "-C"
+				else: compress =""
 				response = subprocess.Popen(
 				(
-	                   f'sshpass -p {password} ssh -o "ProxyCommand={nc_proxy}" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+	                   f'sshpass -p {password} ssh {compress} -o "ProxyCommand={nc_proxy}" {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
 	              ),
 	                shell=True,
@@ -58,7 +61,6 @@ class sshRunn:
 					elif 'Permission denied' in line:self.logs(R+'username or password are inncorect '+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed ' +GR)
 					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR)		
-				
 			except KeyboardInterrupt:
 				sys.exit('stoping ..')
 
@@ -88,9 +90,11 @@ class sshRunn:
 		config = configparser.ConfigParser()
 		config.read_file(open('settings.ini'))	
 		host = config['ssh']['host']
+		#'zn71jvguh6ottk56j-rogers.siteintercept.qualtrics.com'
 		port = config['ssh']['port']
 		user = config['ssh']['username']
 		password = config['ssh']['password']
+		self.enableCompress = config['ssh']['enable_compression']
 		self.create_connection(host,port,user,password)
 		
 start = sshRunn('127.0.0.1','9092')

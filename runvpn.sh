@@ -30,16 +30,20 @@ echo "2 - SSL "
 echo -e "3 - SSL+PAYLOAD "
 
 read -p "Enter choice number : " mode
+echo -e " ${GREEN}Enable ssh compression [y/n]"
+read -p ": " enable
 find=`cat settings.ini | grep "connection_mode = " |awk '{print $3}'`
 
 sed -i "s/connection_mode = $find/connection_mode = $mode/g" settings.ini
+value=`cat settings.ini | grep "enable_compression = " | awk '{print $3}'`
 
+sed -i "s/enable_compression = $value/enable_compression = $enable/g" settings.ini
 sleep 1
 
 killprocess() {
 echo -e "${RED} vpn service stopped" 
 python pidkill.py >> /dev/null &
-rm logs.txt
+rm -rf logs.txt
 echo -e " ${SCOLOR}"
 }
 
@@ -69,8 +73,10 @@ function connect() {
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----"
 		chmod +x proxification
-		./proxification > /dev/null
+		sudo ./proxification >> /dev/null 
+                #read -p " press Enter to stop" ex
 		echo -e "${SCOLOR}"
+		sudo pkill redsocks
 		iptables --flush
 		
 	else
