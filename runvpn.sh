@@ -40,45 +40,54 @@ value=`cat settings.ini | grep "enable_compression = " | awk '{print $3}'`
 sed -i "s/enable_compression = $value/enable_compression = $enable/g" settings.ini
 sleep 1
 
+
 killprocess() {
 echo -e "${RED} vpn service stopped" 
 python3 pidkill.py >> /dev/null &
 rm -rf logs.txt
 echo -e " ${SCOLOR}"
+bash proxy.sh unset
+bash proxy.sh list
+
 }
 
 function connect() {
+	echo "" > logs.txt
 	screen -AmdS nohub python3 tunnel.py
 	sleep 1
 	if [ "$mode" = '0' ] || [ "$mode" = '1' ]
 	then
 
 		screen -AmdS nohub python3 ssh.py 1 1080
+		# python3 ssh.py 1 1080
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
 			
 			screen -AmdS pythonwe python3 ssh.py 2 1080
-					
+			# python3 ssh.py 2 1080
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
 		python3 pidkill.py
 		exit
 	fi
-
+	sleep 5
 	echo -e "${YELLOW}---logs----${SCOLOR}"
 
 	sleep 5
 	cat logs.txt
 
+	bash proxy.sh set
+	bash proxy.sh list
 	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----"
 		chmod +x proxification
-		sudo ./proxification >> /dev/null 
+		sudo  ./proxification >> /dev/null 
                 #read -p " press Enter to stop" ex
 		echo -e "${SCOLOR}"
 		sudo pkill redsocks
 		iptables --flush
+		
 		
 	else
 		echo -e "${RED}failed! ${SCOLOR}"
@@ -87,18 +96,20 @@ function connect() {
 connect 
 for i in {1..3}
 do 
-	
+
 	killprocess
 	echo -e "${GREEN}"
-	read -p "reconnect ? [y\n] " reconnect
-	if [ "$reconnect" = 'y' ]  || [ "$reconnect" = 'Y' ]
-	then
-          echo -e "reconnecting ${SCOLOR}"
-
-		connect
-	else 
-		exit
-	fi 
+	echo -e "reconnecting ${SCOLOR}"
+	connect
+# 	read -p "reconnect ? [y\n] " reconnect
+# 	if [ "$reconnect" = 'y' ]  || [ "$reconnect" = 'Y' ]
+# 	then
+#           echo -e "reconnecting ${SCOLOR}"
+#
+# 		connect
+# 	else
+# 		exit
+# 	fi
 
 done
 
