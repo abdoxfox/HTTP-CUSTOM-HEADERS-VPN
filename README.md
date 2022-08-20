@@ -1,6 +1,6 @@
 # updated by [@nsavinda](https://github.com/nsavinda)
 
-System proxy is automatically changed in the KDE desktop environment.[ProxyMan](https://github.com/himanshub16/ProxyMan/blob/master/kde5.sh)
+System proxy is automatically changed in the KDE desktop environment. [ProxyMan](https://github.com/himanshub16/ProxyMan/blob/master/kde5.sh)
 
 # updated 
 waiting for your opinions 
