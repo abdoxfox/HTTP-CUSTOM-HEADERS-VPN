@@ -1,3 +1,7 @@
+# updated by [@nsavinda](https://github.com/nsavinda)
+
+System proxy is automatically changed in the KDE desktop environment
+
 # updated 
 waiting for your opinions 
 
