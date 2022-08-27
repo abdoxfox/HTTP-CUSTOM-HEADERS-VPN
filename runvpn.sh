@@ -42,22 +42,22 @@ sleep 1
 
 killprocess() {
 echo -e "${RED} vpn service stopped" 
-python pidkill.py >> /dev/null &
+python3 pidkill.py >> /dev/null &
 rm -rf logs.txt
 echo -e " ${SCOLOR}"
 }
 
 function connect() {
-	screen -AmdS nohub python3 tunnel.py
+	screen -AmdS tunnel.py python3 tunnel.py
 	sleep 1
 	if [ "$mode" = '0' ] || [ "$mode" = '1' ]
 	then
 
-		screen -AmdS nohub python3 ssh.py 1 1080
+		screen -AmdS ssh.py python3 ssh.py 1 1080
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
 			
-			screen -AmdS pythonwe python ssh.py 2 1080
+			screen -AmdS ssh.py python3 ssh.py 2 1080
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
 		python3 pidkill.py
