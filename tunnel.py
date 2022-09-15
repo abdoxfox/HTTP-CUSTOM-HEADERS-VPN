@@ -127,9 +127,13 @@ class Tun(injector):
 	          pass
 	        self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
 	        while True:
-		            client, address = sockt.accept()
-		            thr = threading.Thread(target=self.destination, args=(client, address))
-		            thr.start()
+	            try:
+	              client, address = sockt.accept()
+	              thr = threading.Thread(target=self.destination, args=(client, address))
+	              thr.start()
+	            except :
+	               sockt.close()
+	               break
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
