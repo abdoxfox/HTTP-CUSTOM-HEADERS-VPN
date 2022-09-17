@@ -90,7 +90,6 @@ class sshRunn:
 		config = configparser.ConfigParser()
 		config.read_file(open('settings.ini'))	
 		host = config['ssh']['host']
-		#'zn71jvguh6ottk56j-rogers.siteintercept.qualtrics.com'
 		port = config['ssh']['port']
 		user = config['ssh']['username']
 		password = config['ssh']['password']
