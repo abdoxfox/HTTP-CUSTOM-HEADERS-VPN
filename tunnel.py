@@ -16,7 +16,7 @@ Buffer_lenght = 4096 * 4
 class Tun(injector):
 	def __init__(self):
 		self.localip = '127.0.0.1'
-		self.LISTEN_PORT = 9092
+		self.LISTEN_PORT = int(sys.argv[1])
 
 	def conf(self):
 		config = configparser.ConfigParser()
