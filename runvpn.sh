@@ -41,50 +41,49 @@ sed -i "s/enable_compression = $value/enable_compression = $enable/g" settings.i
 sleep 1
 
 killprocess() {
-echo -e "${RED} vpn service stopped" 
-python pidkill.py >> /dev/null &
+echo -e "${RED} KILLING PROCESS...." 
+python3 pidkill.py >>/dev/null 
 rm -rf logs.txt
-echo -e " ${SCOLOR}"
+echo -e " DONE ${SCOLOR}"
 }
 
 function connect() {
-	screen -AmdS nohub python3 tunnel.py
+        localport="$1"
+	screen -AmdS nohub python3 tunnel.py $localport
 	sleep 1
 	if [ "$mode" = '0' ] || [ "$mode" = '1' ]
 	then
 
-		screen -AmdS nohub python3 ssh.py 1 1080
+		screen -AmdS nohub python3 ssh.py 1 $localport
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
 			
-			screen -AmdS pythonwe python ssh.py 2 1080
+			screen -AmdS pythonwe python3 ssh.py 2  $localport 
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
-		python3 pidkill.py
+		killprocess
 		exit
 	fi
 
 	echo -e "${YELLOW}---logs----${SCOLOR}"
 
-	sleep 5
+	sleep 10
 	cat logs.txt
 
 	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
 	if [ "$var" = "SUCCESSFULLY" ];then 
-		echo -e "${GREEN}---Tunneling  starts-----"
+		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
 		chmod +x proxification
 		sudo ./proxification >> /dev/null 
-                #read -p " press Enter to stop" ex
-		echo -e "${SCOLOR}"
-		sudo pkill redsocks
+               
 		iptables --flush
 		
 	else
-		echo -e "${RED}failed! ${SCOLOR}"
+		echo -e "${RED}Failed to connect ... Try again${SCOLOR}"
 	fi
 }
-connect 
-for i in {1..3}
+connect 9090
+for i in {9091..9094}
 do 
 	
 	killprocess
@@ -94,11 +93,10 @@ do
 	then
           echo -e "reconnecting ${SCOLOR}"
 
-		connect
+		connect $i 
 	else 
 		exit
 	fi 
-
 done
 
 
