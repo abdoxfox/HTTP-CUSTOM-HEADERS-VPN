@@ -96,7 +96,7 @@ class sshRunn:
 		self.enableCompress = config['ssh']['enable_compression']
 		self.create_connection(host,port,user,password)
 localport = sys.argv[2]		
-start = sshRunn('127.0.0.1','9092')
+start = sshRunn('127.0.0.1', localport)
 start.main()
 		
 
