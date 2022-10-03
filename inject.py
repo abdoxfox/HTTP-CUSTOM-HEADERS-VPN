@@ -3,6 +3,7 @@ import socket
 import configparser
 import re
 
+
 bg=''
 G = bg+'\033[32m'
 O = bg+'\033[33m'
@@ -11,7 +12,7 @@ R = bg+'\033[31m'
 
 
 
-class injector:
+class injector():
 	def __init__(self):
 		pass
 
@@ -38,6 +39,7 @@ class injector:
 	def auto_rep(self,config):
 		result = config['config']['auto_replace']
 		return result
+	
 
 
 	def payloadformating(self,payload,host,port):
@@ -66,8 +68,8 @@ class injector:
 
 	def connection(self,client, s,host,port):
 	        if int(self.conn_mode(self.conf())) == 0:
-	        	payload = f'CONNECT {host}:{port} HTTP/1.0\r\n\r\n'
-	       
+	        	payload = b'SSH-2.0-abdoxfox'
+	        			       
 	        else:
 	        	payload = self.payloadformating(self.getpayload(self.conf()),host,port)
 	        
@@ -122,7 +124,7 @@ class injector:
 	          time.sleep(1.0)
 	          s.send(xsplit[1].encode())
 	        else:
-	          
+	          print(payload)
 	          s.send(payload.encode())
 	        self.get_resp(s,client)
 	def get_resp(self,server,client) :
@@ -134,11 +136,11 @@ class injector:
 			client.send(packet)
 			return True
 		else:
-			if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
-				self.logs(f'{O}response : {G}{status}{GR}')
-			client.send(b'HTTP/1.1 200 Connection established\r\n\r\n')
-			return self.get_resp(server,client)
-		
+			if status:
+                            if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
+                                self.logs(f'{O}response : {G}{status}{GR}')
+                                client.send(b'HTTP/1.1 200 Connection established\r\n\r\n')
+                                return self.get_resp(server,client)		
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
 		logfile = open('logs.txt','a')

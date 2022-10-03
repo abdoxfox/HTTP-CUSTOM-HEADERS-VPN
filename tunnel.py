@@ -56,7 +56,7 @@ class Tun(injector):
 					connected = False;break
 		client.close()
 		sockt.close()
-		self.logs('Disconnected')
+		os.system('sudo python3 pidkill.py Disconnect')
 	def destination(self,client, address):
 	    try:
 	        self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
@@ -102,8 +102,7 @@ class Tun(injector):
 	        	injector.connection(self,client, s,str(host),str(port))
 	        else:
 	        	injector.connection(self,client, s,str(host),str(port))
-
-
+	       
 	        self.tunneling(client,s)
 	    except Exception as e:
 	    	self.logs(f'{e}')
@@ -123,6 +122,7 @@ class Tun(injector):
 	        except OSError as msg:
 	            self.logs(str(msg))
 	            sockt.close()
+                    
 	        if sockt:
 	          pass
 	        self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
