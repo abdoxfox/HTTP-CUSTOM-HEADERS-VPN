@@ -1,5 +1,7 @@
 # updated 
 
+- fix Direct SSH mode issue 
+
 - fix dns resolving issue
 - fix already port binded 
 
