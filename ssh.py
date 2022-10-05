@@ -78,7 +78,7 @@ class sshRunn:
 					
 			except KeyboardInterrupt:
 			
-			    print('hiii');sys.exit('stoping ..');threading.Lock().release()
+			    sys.exit('stoping ..');threading.Lock().release()
 
 
 	def create_connection(self,host,port,user,password,mode):
@@ -92,7 +92,7 @@ class sshRunn:
 		  		  ip = host
 		    sockslocalport  = 1080
 		    sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,ip,port,user,password,mode))
-		    sshthread.start()#;threading.Lock().acquire()
+		    sshthread.start()
 		except ConnectionRefusedError:         
 		    pass
 		      
