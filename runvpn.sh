@@ -18,7 +18,8 @@ sleep 1
 unzip redsocks 
 cd redsocks 
 make
-fi
+chmod +x redsocks
+fi 
 EOF
 bash redsocksSetup.sh && rm redsocksSettup.sh
 clear
