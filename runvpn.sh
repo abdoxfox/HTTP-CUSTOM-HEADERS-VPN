@@ -59,7 +59,7 @@ function connect() {
 	
 	if [ "$mode" = '0' ] 
         then
-           screen -AmdS nohub pythonn3 ssh.py 0 _
+           screen -AmdS nohub python3 ssh.py 0 _
         elif [ "$mode" = '1' ]
 	  then
                screen -AmdS nohub python3 tunnel.py $localport
