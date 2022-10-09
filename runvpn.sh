@@ -18,8 +18,7 @@ sleep 1
 unzip redsocks 
 cd redsocks 
 make
-chmod +x redsocks
-fi 
+fi
 EOF
 bash redsocksSetup.sh && rm redsocksSettup.sh
 clear
@@ -31,15 +30,22 @@ echo "2 - SSL "
 echo -e "3 - SSL+PAYLOAD "
 
 read -p "Enter choice number : " mode
-echo -e " ${GREEN}Enable ssh compression [y/n]"
-read -p ": " enable
-find=`cat settings.ini | grep "connection_mode = " |awk '{print $3}'`
 
-sed -i "s/connection_mode = $find/connection_mode = $mode/g" settings.ini
-value=`cat settings.ini | grep "enable_compression = " | awk '{print $3}'`
+con_mode=`cat settings.ini | grep "connection_mode = " |awk '{print $3}'`
 
-sed -i "s/enable_compression = $value/enable_compression = $enable/g" settings.ini
-sleep 1
+sed -i "s/connection_mode = $con_mode/connection_mode = $mode/g" settings.ini
+read -p "Enable Dns [y/n] : " dnsenable
+if [ "$dnsenable" = "y" ] || [ "$dnsenable" = "Y" ] 
+
+  then
+     sed -i "s/#iptables -t nat -A PROXY -p udp/iptables -t nat -A PROXY -p udp/g" proxification
+
+else
+   if [ $(cat proxification |grep "nat -A PROXY -p udp" | awk '{print $1;exit}') != "#iptables" ]
+    then
+     sed -i "s/iptables -t nat -A PROXY -p udp/#iptables -t nat -A PROXY -p udp/g" proxification
+    fi
+fi
 
 killprocess() {
 echo -e "${RED} KILLING PROCESS...." 
@@ -50,15 +56,19 @@ echo -e " DONE ${SCOLOR}"
 
 function connect() {
         localport="$1"
-	screen -AmdS nohub python3 tunnel.py $localport
-	sleep 1
-	if [ "$mode" = '0' ] || [ "$mode" = '1' ]
-	then
-
-		screen -AmdS nohub python3 ssh.py 1 $localport
+	
+	if [ "$mode" = '0' ] 
+        then
+           screen -AmdS nohub pythonn3 ssh.py 0 _
+        elif [ "$mode" = '1' ]
+	  then
+               screen -AmdS nohub python3 tunnel.py $localport
+               sleep 1
+               screen -AmdS nohub python3 ssh.py 1 $localport
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
-			
+			screen -AmdS nohub python3 tunnel.py $localport
+                        sleep 1
 			screen -AmdS pythonwe python3 ssh.py 2  $localport 
 	else
 		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
@@ -77,7 +87,7 @@ function connect() {
 		chmod +x proxification
 		sudo ./proxification >> /dev/null 
                
-		iptables --flush
+		sudo iptables -t nat -F OUTPUT
 		
 	else
 		echo -e "${RED}Failed to connect ... Try again${SCOLOR}"

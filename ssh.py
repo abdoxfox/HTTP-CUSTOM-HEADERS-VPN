@@ -32,21 +32,17 @@ class sshRunn:
 				nc_proxies_mode = [f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p',f'corkscrew {inject_host} {inject_port} %h %p']
 				arg = str(sys.argv[1])
 				
-				if int(mode) !=0:
-					sock = socket.socket()
-					sock.connect((self.inject_host,int(self.inject_port)))
-					payload = f'CONNECT {host}:{port}\r\n\r\n'
-					sock.send(payload.encode())
-					if arg == '2':
+				if arg == '2':
 						proxycmd =f'-o "ProxyCommand={nc_proxies_mode[0]}"'
-					else:
+				elif arg =='1':
 						proxycmd = f'-o "ProxyCommand={nc_proxies_mode[1]}"'
-				else :
-					
+				elif arg =='0':
+	   
+					self.logs("Connecting Using Direct SSH " )
 					proxycmd =''
 				if self.enableCompress=='y':
 					      compress = "-C"
-				compress =""
+				else:compress =""
 				response = subprocess.Popen(
 				(
 	                   f'sshpass -p {password} ssh {compress} {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
@@ -78,8 +74,7 @@ class sshRunn:
 					
 			except KeyboardInterrupt:
 			
-			    sys.exit('stoping ..');threading.Lock().release()
-
+			    sys.exit('stoping ..')
 
 	def create_connection(self,host,port,user,password,mode):
 		global soc , payload
@@ -98,7 +93,7 @@ class sshRunn:
 		      
 		except KeyboardInterrupt :
 		
-		    threading.Lock().release();self.logs(R+'ssh stopped'+GR);threading.Lock().release()
+		    self.logs(R+'ssh stopped'+GR);threading.Lock().release()
 	def logs(self,log):
 	   		with open('logs.txt','a') as file:
 	   			file.write(log+'\n')
