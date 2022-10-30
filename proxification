@@ -25,4 +25,6 @@ iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 7300
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
 # run socksifier
-sudo ./redsocks/redsocks -c redsocks.conf
+cd redsocks
+chmod +x redsocks
+sudo ./redsocks -c ../redsocks.conf
