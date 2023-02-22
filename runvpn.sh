@@ -59,15 +59,15 @@ function connect() {
 	
 	if [ "$mode" = '0' ] 
         then
-           screen -AmdS nohub python3 ssh.py 0 _
+           screen -AmdS nohup python3 ssh.py 0 _
         elif [ "$mode" = '1' ]
 	  then
-               screen -AmdS nohub python3 tunnel.py $localport
+               screen -AmdS nohup python3 tunnel.py $localport
                sleep 1
-               screen -AmdS nohub python3 ssh.py 1 $localport
+               screen -AmdS nohup python3 ssh.py 1 $localport
 	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
 		then 
-			screen -AmdS nohub python3 tunnel.py $localport
+			screen -AmdS nohup python3 tunnel.py $localport
                         sleep 1
 			screen -AmdS pythonwe python3 ssh.py 2  $localport 
 	else
