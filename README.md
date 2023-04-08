@@ -1,17 +1,14 @@
-# updated 
-
-- fix Direct SSH mode issue 
-
-- fix dns resolving issue
-- fix already port binded 
 
 
-# http-ssl-ssh-tunneling
-http ssl ssh tunneling vpn for android and linux devices
+# HTTP CUSTOM HEADERS VPN 
+is an ssh based vpn that uses:
 
-# whats new!
+- HTTP Headers (payload) direct or with proxy.
+- SSL/TLS Handshake over SNI.
+- Combination between both (payload + ssl ) is supported too.
 
-* Now support combination ssl + payload 
+
+
 
 # packages :
 
@@ -31,19 +28,18 @@ past your data into file settings.ini
 
 (root is required in android )
 
-[+] - git clone https://github.com/abdoxfox/http-ssl-ssh-injector.git
+[+] - git clone https://github.com/abdoxfox/HTTP-CUSTOM-HEADERS-VPN.git
 
-# steps :
+- steps :
 
-* setup your custom payload and proxy (proxy not required)
 
-[+] - cd http-ssl-ssh-injector
+[+] - cd HTTP-CUSTOM-HEADERS-VPN
 
-[+] - sudo  or tsu for termux  #run as root
+[+] - fill settings.ini file with your suitable configuration 
 
 [+] - chmod +x runvpn.sh
 
-[+] - ./runvpn.sh
+[+] - sudo bash runvpn.sh
 
 * choose your connection mode:
 
