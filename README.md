@@ -35,7 +35,7 @@ past your data into file settings.ini
 
 [+] - cd HTTP-CUSTOM-HEADERS-VPN
 
-[+] - fill settings.ini file with your suitable configuration 
+[+] - fill settings.ini file with your suitable configuration (look at sample configuration in image above)
 
 [+] - chmod +x runvpn.sh
 
