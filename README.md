@@ -14,6 +14,10 @@ is an ssh based vpn that uses:
 
 [+] - apt install -y git openssh sshpass netcat-openbsd corkscrew screen python3
 
+[+] - apt install python3-pip 
+
+[+] - apt install make
+
 [+] - pip install certifi
 
 
