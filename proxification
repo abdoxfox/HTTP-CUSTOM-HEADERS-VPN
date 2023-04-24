@@ -28,6 +28,3 @@ trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t 
 
 # run socksifier
 /usr/sbin/redsocks -c redsocks.conf
-
-#chmod +x /redsocks/redsocks
-#./redsocks/redsocks -c redsocks.conf
