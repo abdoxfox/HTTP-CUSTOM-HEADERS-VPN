@@ -3,7 +3,6 @@
 
 A tool used to establish secure connections between a client and a server over an insecure network with customized header.
 
-
 ## Installation
 Install dependencies:
 ```bash
@@ -13,6 +12,11 @@ pip3 install certifi
 Clone the repository:
 ```bash
 git clone https://github.com/akilaid/HTTP-CUSTOM-HEADERS-VPN.git
+```
+Disable redsocks autostart on reboot:
+```bash
+systemctl stop redsocks
+systemctl disable redsocks
 ```
 Add your server seetings, custom payload and proxy (if required):
 ```bash
