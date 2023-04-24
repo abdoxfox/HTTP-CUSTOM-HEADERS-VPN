@@ -13,7 +13,7 @@ iptables -t nat -A PROXY -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A PROXY  -d 240.0.0.0/4 -j RETURN
 
 #start downloading some traffic to fix the glitch
-curl -x "socks5://127.0.0.1:1080" -O -k http://speedtest.tele2.net/10MB.zip &
+curl -x "socks5://127.0.0.1:1080" -O -k wget http://80.249.99.148/10MB.zip &
 sleep 0.5
 
 # socksify whole TCP traffic
