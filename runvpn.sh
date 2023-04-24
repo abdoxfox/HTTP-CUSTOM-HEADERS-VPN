@@ -18,8 +18,8 @@ sleep 1
 unzip redsocks 
 cd redsocks 
 make
-cat redsocks > redocksv
-cp redsocks v ..
+cp redsocks redsocksv
+cp redsocksv ..
 fi
 EOF
 bash redsocksSetup.sh
