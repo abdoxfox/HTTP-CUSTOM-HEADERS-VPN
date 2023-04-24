@@ -22,7 +22,9 @@ cat redsocks > redocksv
 cp redsocks v ..
 fi
 EOF
-bash redsocksSetup.sh && rm redsocksSettup.sh
+bash redsocksSetup.sh
+rm redsocksSettup.sh
+rm -rf redsocks
 clear
 
 echo -e "${GREEN}Choose Connection Method:"
