@@ -2,7 +2,10 @@
 # HTTP TLS/SSL Tunneling Client for Linux (CLI)
 
 A tool used to establish secure connections between a client and a server over an insecure network with customized header.
-
+* Options  
+  * HTTP Headers (payload) direct or with proxy.
+  * SSL/TLS Handshake over SNI.
+  * Combination between both (payload + ssl ) is supported too.
 ## Installation
 Install dependencies:
 ```bash
