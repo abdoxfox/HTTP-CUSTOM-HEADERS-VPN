@@ -13,7 +13,7 @@ Clone the repository:
 ```bash
 git clone https://github.com/akilaid/HTTP-CUSTOM-HEADERS-VPN.git
 ```
-Disable redsocks autostart on reboot:
+stop and disable redsocks autostart on reboot:
 ```bash
 systemctl stop redsocks
 systemctl disable redsocks
