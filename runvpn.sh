@@ -23,7 +23,7 @@ cp redsocksv ..
 fi
 EOF
 bash redsocksSetup.sh
-rm redsocksSettup.sh
+rm redsocksSetup.sh
 rm -rf redsocks
 clear
 
