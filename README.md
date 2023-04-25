@@ -19,12 +19,6 @@ apt install make
 pip install certifi
 ```
 
-# configuration :
-
-past your data into file settings.ini 
-
-![image](https://user-images.githubusercontent.com/46646744/122469251-9f621400-cfb4-11eb-9d64-f5dbfa2dffa9.png)
-
 
 # how it works!
 
@@ -33,7 +27,10 @@ past your data into file settings.ini
 git clone https://github.com/abdoxfox/HTTP-CUSTOM-HEADERS-VPN.git
 cd HTTP-CUSTOM-HEADERS-VPN
 ```
-[+] - fill settings.ini file with your suitable configuration (look at sample configuration in image above)
+[+] - and fill the settings.ini file:
+![image](https://user-images.githubusercontent.com/46646744/122469251-9f621400-cfb4-11eb-9d64-f5dbfa2dffa9.png)
+
+
 - then:
 ```
 chmod +x runvpn.sh
