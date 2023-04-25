@@ -12,14 +12,12 @@ is an ssh based vpn that uses:
 
 # packages :
 
-[+] - apt install -y git openssh sshpass netcat-openbsd corkscrew screen python3
-
-[+] - apt install python3-pip 
-
-[+] - apt install make
-
-[+] - pip install certifi
-
+```
+apt install -y git openssh sshpass netcat-openbsd corkscrew screen python3
+apt install python3-pip 
+apt install make
+pip install certifi
+```
 
 # configuration :
 
@@ -31,20 +29,16 @@ past your data into file settings.ini
 # how it works!
 
 (root is required in android )
-
-[+] - git clone https://github.com/abdoxfox/HTTP-CUSTOM-HEADERS-VPN.git
-
-- steps :
-
-
-[+] - cd HTTP-CUSTOM-HEADERS-VPN
-
+```
+git clone https://github.com/abdoxfox/HTTP-CUSTOM-HEADERS-VPN.git
+cd HTTP-CUSTOM-HEADERS-VPN
+```
 [+] - fill settings.ini file with your suitable configuration (look at sample configuration in image above)
-
-[+] - chmod +x runvpn.sh
-
-[+] - sudo bash runvpn.sh
-
+- then:
+```
+chmod +x runvpn.sh
+sudo bash runvpn.sh
+```
 * choose your connection mode:
 
 ![image](https://user-images.githubusercontent.com/46646744/122469828-48a90a00-cfb5-11eb-8b2b-48e9870618b2.png)
