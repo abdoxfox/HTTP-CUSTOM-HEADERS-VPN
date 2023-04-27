@@ -27,4 +27,4 @@ trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t 
 # run socksifier
 
 chmod +x redsocksv
-sudo ./redsocks -c redsocks.conf
+sudo ./redsocksv -c redsocks.conf
