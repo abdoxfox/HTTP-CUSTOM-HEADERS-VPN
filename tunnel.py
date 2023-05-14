@@ -51,9 +51,9 @@ class Tun(injector):
 						client.send(data)
 					else:
 						sockt.send(data)
-				except Exception as e:
-					self.logs(f'{R} {e}{GR}')
-					connected = False;break
+				except Exception as e:pass
+					#self.logs(f'{R} {e}{GR}')
+					#connected = False;break
 		client.close()
 		sockt.close()
 		os.system('sudo python3 pidkill.py Disconnect')
