@@ -86,10 +86,11 @@ function connect() {
 	cat logs.txt
 
 	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
+	echo $var
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
 		chmod +x proxification
-		sudo ./proxification >> /dev/null 
+		sudo bash proxification #>> /dev/null 
                
 		sudo iptables -t nat -F OUTPUT
 		
@@ -98,20 +99,11 @@ function connect() {
 	fi
 }
 connect 9090
-for i in {9091..9094}
+for i in {9091..9099}
 do 
 	
 	killprocess
-	echo -e "${GREEN}"
-	read -p "reconnect ? [y\n] " reconnect
-	if [ "$reconnect" = 'y' ]  || [ "$reconnect" = 'Y' ]
-	then
-          echo -e "reconnecting ${SCOLOR}"
-
-		connect $i 
-	else 
-		exit
-	fi 
+	connect $i 
 done
 
 
