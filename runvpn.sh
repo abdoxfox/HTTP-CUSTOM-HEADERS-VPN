@@ -90,7 +90,7 @@ function connect() {
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
 		chmod +x proxification
-		sudo bash proxification #>> /dev/null 
+		sudo bash proxification >> /dev/null 
                
 		sudo iptables -t nat -F OUTPUT
 		
