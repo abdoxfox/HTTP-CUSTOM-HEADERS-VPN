@@ -26,7 +26,7 @@ bash redsocksSetup.sh
 rm redsocksSetup.sh
 rm -rf redsocks
 clear
-
+function modeChange() {
 echo -e "${GREEN}Choose Connection Method:"
 echo "0 - SSH Direct "
 echo "1 - PAYLOAD "
@@ -38,7 +38,10 @@ read -p "Enter choice number : " mode
 con_mode=`cat settings.ini | grep "connection_mode = " |awk '{print $3}'`
 
 sed -i "s/connection_mode = $con_mode/connection_mode = $mode/g" settings.ini
-read -p "Enable Dns [y/n] : " dnsenable
+
+}
+
+dnsenable="y"
 if [ "$dnsenable" = "y" ] || [ "$dnsenable" = "Y" ] 
 
   then
@@ -57,7 +60,7 @@ python3 pidkill.py >>/dev/null
 rm -rf logs.txt
 echo -e " DONE ${SCOLOR}"
 }
-
+modeChange
 function connect() {
         localport="$1"
 	
@@ -85,8 +88,8 @@ function connect() {
 	sleep 10
 	cat logs.txt
 
-	var=`cat logs.txt | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
-	echo $var
+	var=`cat logs.txt |tail -n 1 | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
+        
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
 		chmod +x proxification

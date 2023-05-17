@@ -19,7 +19,7 @@ iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8124
 
 # socksify only DNS UDP traffic
 
-#iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 5300
+iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 5300
 
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
