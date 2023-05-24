@@ -26,7 +26,6 @@ cd dns2socks
 make
 chmod 777 dns2socks
 cp dns2socks "$PREFIX"/bin
-sleep 10
 fi
 EOF
 bash redsocksSetup.sh
