@@ -40,12 +40,12 @@ class sshRunn:
 	   
 					self.logs("Connecting Using Direct SSH " )
 					proxycmd =''
-				if self.enableCompress=='y':
-					      compress = "-C"
-				else:compress =""
+				
+					
+				
 				response = subprocess.Popen(
 				(
-	                   f'sshpass -p {password} ssh {compress} {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+	                   f'sshpass -p {password} ssh {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
 	              ),
 	              shell=True,
@@ -106,7 +106,7 @@ class sshRunn:
 		port = config['ssh']['port']
 		user = config['ssh']['username']
 		password = config['ssh']['password']
-		self.enableCompress = config['ssh']['enable_compression']
+		
 		self.create_connection(host,port,user,password,mode)
 	
 localport= sys.argv[2]
