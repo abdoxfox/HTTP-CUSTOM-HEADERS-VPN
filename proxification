@@ -18,12 +18,14 @@ iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8123
 iptables -t nat -A PROXY -p tcp -j REDIRECT --to-ports 8124
 
 # socksify only DNS UDP traffic
-
-iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 5300
-
+#iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 7300
+iptables -t nat -A PROXY -p udp --dport 53 -j DNAT --to-destination 127.0.0.1
+#iptables -t nat -A PROXY -p udp --dport 53 -j DNAT --to-destination 8.8.8.8
+#iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 7300
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
 # run socksifier
 
-chmod +x redsocksv
-sudo ./redsocksv -c redsocks.conf
+#chmod +x redsocksv
+#
+dns2socks 127.0.0.1:1080 1.1.1.1:53  > /dev/null & sleep 5 &./redsocksv -c redsocks.conf
