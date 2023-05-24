@@ -1,4 +1,8 @@
+# What's New:
+* added dns2socks for resolve dns udp traffic over cloudflare dns 
+* change tunneling mode is only on settings.ini file
 
+let me now if did you had some other issues to fix by opening a new issue.
 
 # HTTP CUSTOM HEADERS VPN 
 is an ssh based vpn that uses:
