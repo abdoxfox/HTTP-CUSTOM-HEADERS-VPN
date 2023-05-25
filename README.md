@@ -32,6 +32,19 @@ git clone https://github.com/abdoxfox/HTTP-CUSTOM-HEADERS-VPN.git
 cd HTTP-CUSTOM-HEADERS-VPN
 ```
 [+] - and fill the settings.ini file:
+* choose your connection mode:
+
+    mode 0 : ssh direct
+
+    mode 1 : payload with or without proxy
+
+    mode 2 :  ssl/tls (sni)
+
+     mode 3 : payload + sni 
+
+- according to your mode preference modify below line in settings.ini with the choosen mode number
+
+connection_mode = 1
 ![image](https://user-images.githubusercontent.com/46646744/122469251-9f621400-cfb4-11eb-9d64-f5dbfa2dffa9.png)
 
 
@@ -40,12 +53,9 @@ cd HTTP-CUSTOM-HEADERS-VPN
 chmod +x runvpn.sh
 sudo bash runvpn.sh
 ```
-* choose your connection mode:
-
-![image](https://user-images.githubusercontent.com/46646744/122469828-48a90a00-cfb5-11eb-8b2b-48e9870618b2.png)
 
 
-# screenshots 
+# screenshot
 
 ![image](https://user-images.githubusercontent.com/46646744/121225010-00853b80-c881-11eb-8cb6-4fcea95f8f88.png)
 
