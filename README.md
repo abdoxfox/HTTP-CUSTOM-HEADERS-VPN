@@ -43,8 +43,9 @@ cd HTTP-CUSTOM-HEADERS-VPN
      mode 3 : payload + sni 
 
 - according to your mode preference modify below line in settings.ini with the choosen mode number
+ex
+connection_mode = 0
 
-connection_mode = 1
 ![image](https://user-images.githubusercontent.com/46646744/122469251-9f621400-cfb4-11eb-9d64-f5dbfa2dffa9.png)
 
 
