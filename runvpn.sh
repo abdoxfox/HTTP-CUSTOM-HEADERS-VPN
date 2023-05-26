@@ -19,13 +19,14 @@ unzip redsocks
 cd redsocks 
 make
 cp redsocks redsocksv
-cp redsocksv ../
+cp redsocksv "$PREFIX"/bin
 cd ..
 unzip dns2socks.zip
 cd dns2socks
 make
 chmod 777 dns2socks
 cp dns2socks "$PREFIX"/bin
+sleep 10
 fi
 EOF
 bash redsocksSetup.sh
@@ -39,10 +40,9 @@ m=`cat settings.ini |sed -e '1p' -e '/connection_mode/!d'| awk '{print $3}'`
 mode="$m"
 
 killprocess() {
-echo -e "${RED} KILLING PROCESS...." 
-python3 pidkill.py >>/dev/null 
-rm -rf logs.txt
-echo -e " DONE ${SCOLOR}"
+echo -e "${RED}[+] KILLING PROCESS...." 
+sudo python pidkill.py > /dev/null
+echo -e "[+] DONE ${SCOLOR}"
 }
 
 function connect() {
@@ -62,8 +62,7 @@ function connect() {
                         sleep 1
 			screen -AmdS pythonwe python3 ssh.py 1  $localport 
 	else
-		echo -e "${RED}wrong choice\ntry again${SCOLOR}"
-		killprocess
+	  echo "${RED}mode ${mode} is not listed ${SCOLOR} "
 		exit
 	fi
 
@@ -77,11 +76,9 @@ function connect() {
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
 		chmod +x proxification
-		sudo ./proxification >> /dev/null 
-	
+		sudo ./proxification > /dev/null 
+		       
                
-		sudo iptables -t nat -F OUTPUT
-		
 	else
 		echo -e "${RED}Failed to connect ... Try again${SCOLOR}"
 	fi
@@ -89,8 +86,9 @@ function connect() {
 connect 9090
 for i in {9091..9099}
 do 
-	
+	rm -rf logs.txt
 	killprocess
 	connect $i 
 done
 
+sudo pkill redsocksv

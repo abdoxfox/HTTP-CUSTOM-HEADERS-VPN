@@ -40,12 +40,12 @@ class sshRunn:
 	   
 					self.logs("Connecting Using Direct SSH " )
 					proxycmd =''
-				
-					
-				
+				if self.enableCompress=='y':
+					      compress = "-C"
+				else:compress =""
 				response = subprocess.Popen(
 				(
-	                   f'sshpass -p {password} ssh {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+	                   f'sshpass -p {password} ssh {compress} {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
 	                   
 	              ),
 	              shell=True,
@@ -70,6 +70,8 @@ class sshRunn:
 					elif 'Permission denied' in line:self.logs(R+'username or password are inncorect '+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed ' +GR)
 					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR);
+					elif "client_loop: send disconnect:" in line:
+					    os.system('sudo python3 pidkill.py ')
 					
 					
 			except KeyboardInterrupt:
@@ -78,22 +80,21 @@ class sshRunn:
 
 	def create_connection(self,host,port,user,password,mode):
 		global soc , payload
-		try:    								
+		try:
 		    regx = r'[a-zA-Z0-9_]'
 		    if re.match(regx,host):
 		    	try:
 		    		ip = socket.gethostbyname(host)
 		    	except:
-		  		  ip = host
+		  		  ip = host 						
 		    sockslocalport  = 1080
 		    sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,ip,port,user,password,mode))
 		    sshthread.start()
-		except ConnectionRefusedError:         
-		    pass
-		      
+		except ConnectionRefusedError:     
+		    self.logs("CONNECTION REFUSED")	      
 		except KeyboardInterrupt :
-		
-		    self.logs(R+'ssh stopped'+GR);threading.Lock().release()
+		    self.logs(R+'ssh stopped'+GR)
+		    
 	def logs(self,log):
 	   		with open('logs.txt','a') as file:
 	   			file.write(log+'\n')
@@ -106,7 +107,7 @@ class sshRunn:
 		port = config['ssh']['port']
 		user = config['ssh']['username']
 		password = config['ssh']['password']
-		
+		self.enableCompress = config['ssh']['enable_compression']
 		self.create_connection(host,port,user,password,mode)
 	
 localport= sys.argv[2]

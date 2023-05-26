@@ -56,7 +56,7 @@ class Tun(injector):
 					#connected = False;break
 		client.close()
 		sockt.close()
-		os.system('sudo python3 pidkill.py Disconnect')
+		#os.system('sudo python3 pidkill.py Disconnect')
 	def destination(self,client, address):
 	    try:
 	        self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
@@ -70,6 +70,7 @@ class Tun(injector):
 	        	proxip = host
 	        	proxport = port
 	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	        s.settimeout(10)
 	        s.connect((proxip,int(proxport)))
 	        self.logs(f'{O}[TCP] {G}connected to {proxip}:{proxport}{GR}')
 	        if int(self.conn_mode(self.conf())) == 2:

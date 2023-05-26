@@ -87,19 +87,24 @@ class injector():
 
 	def get_resp(self,server,client) :
 		packet = server.recv(1024)
-		res = packet.decode('utf-8','ignore')
-		status = res.split('\n')[0]
-		if status.split('-')[0]=='SSH':
-			self.logs(f'response : {status}')
-			client.send(packet)
-			return True
+		print(str(packet) +"\n---------------------")
+		status = packet.decode('utf-8','ignore').split('\r\n')
+		response = status[0]
+		packetsplit = [data for data in packet.split(b'\r\n\r\n') if data.split(b'-')[0]==b"SSH"]	
+		if packetsplit:
+				response = packetsplit[0].decode('utf-8',"ignore").split('\r\n')[0]
+				self.logs(f'response : {response}')
+				client.send(packetsplit[0])
+					
+				return True
 		else:
-			if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
-				self.logs(f'response : {status}')
-				client.send(b'HTTP/1.1 200 Connection established\r\n\r\n')
-				return self.get_resp(server,client)
-
+				if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status[0]):
+					self.logs(f'response : {response}')
+					client.send(b'HTTP/1.1 200 ok\r\nContent-Lenght: 999999999\r\n\r\n')
+					return self.get_resp(server,client)
+	
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
 		logfile = open('logs.txt','a')
 		logfile.write(f'[{logtime}] : {str(log)}\n')
+
