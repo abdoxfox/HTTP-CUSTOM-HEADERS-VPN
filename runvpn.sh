@@ -91,4 +91,3 @@ do
 	connect $i 
 done
 
-sudo pkill redsocksv
