@@ -2,7 +2,7 @@ import subprocess
 import os
 
 def handler():
-    os.system("pkill redsocks && pkill dns2socks")
+    os.system("pkill redsocksv && pkill dns2socks")
     os.system("iptables -t nat -F OUTPUT")
     cmd = subprocess.Popen(("netstat -anp|grep screen|awk '{print$9}'"),shell=True, stdout=subprocess.PIPE)
     output, error = cmd.communicate()
