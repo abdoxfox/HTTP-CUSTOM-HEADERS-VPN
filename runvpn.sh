@@ -36,8 +36,7 @@ rm -rf dns2socks
 clear
 
 
-m=`cat settings.ini |sed -e '1p' -e '/connection_mode/!d'| awk '{print $3}'`
-mode="$m"
+mode=$(cat settings.ini |grep "connection_mode"| awk '{print $3}')
 
 killprocess() {
 echo -e "${RED}[+] KILLING PROCESS...." 
