@@ -4,7 +4,9 @@ RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 SCOLOR='\033[0m'
-cat << EOF > redsocksSetup.sh
+
+
+cat << EOF > rSetup.sh
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
@@ -13,26 +15,28 @@ if [ -f "redsocksv" ]
 then 
 echo "${GREEN}Redsocks installed ${SCOLOR}"
 else
-echo -e "${GREEN} COMPILLING REDSOCKS BINARY ...${SCOLOR}"
+echo -e "${GREEN} COMPILLING REDSOCKS BINARY & Dns2socks  ...${SCOLOR}"
 sleep 1
 unzip redsocks 
 cd redsocks 
 make
-cp redsocks redsocksv
-cp redsocksv "$PREFIX"/bin
+mv redsocks ../redsocksv
 cd ..
+cp redsocksv "$PREFIX"/bin
 unzip dns2socks.zip
 cd dns2socks
 make
 chmod 777 dns2socks
 cp dns2socks "$PREFIX"/bin
-sleep 10
+sleep 3
 fi
-EOF
-bash redsocksSetup.sh
-rm redsocksSetup.sh
 rm -rf redsocks
 rm -rf dns2socks
+EOF
+
+bash rSetup.sh
+rm rSetup.sh
+
 clear
 
 
@@ -40,7 +44,7 @@ mode=$(cat settings.ini |grep "connection_mode"| awk '{print $3}')
 
 killprocess() {
 echo -e "${RED}[+] KILLING PROCESS...." 
-sudo python pidkill.py > /dev/null
+sudo python pidkill.py 
 echo -e "[+] DONE ${SCOLOR}"
 }
 
@@ -75,14 +79,15 @@ function connect() {
 	if [ "$var" = "SUCCESSFULLY" ];then 
 		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
 		chmod +x proxification
-		sudo ./proxification > /dev/null 
+		sudo ./proxification > /dev/null
+		sudo iptables -t nat -F OUTPUT
 		       
                
 	else
 		echo -e "${RED}Failed to connect ... Try again${SCOLOR}"
 	fi
 }
-connect 9090
+connect 9089
 for i in {9091..9099}
 do 
 	rm -rf logs.txt
