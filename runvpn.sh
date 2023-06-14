@@ -30,6 +30,7 @@ chmod 777 dns2socks
 cp dns2socks "$PREFIX"/bin
 sleep 3
 fi
+cd ..
 rm -rf redsocks
 rm -rf dns2socks
 EOF
