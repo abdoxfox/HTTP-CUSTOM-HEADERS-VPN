@@ -38,29 +38,31 @@ class Tun(injector):
 	def conn_mode(self,config):
 		mode = config['mode']['connection_mode']
 		return mode
-	def tunneling(self,client,sockt):
+	def tunneling(self,client,sockt, packet):
+		client.send(packet)
 		connected = True
 		while connected == True:
-			r, w, x = select.select([client,sockt], [], [client,sockt],3)
+			r, _, x = select.select([client,sockt], [], [client,sockt],3)
 			if x: connected = False; break
 			for i in r:
 				try:
 					data = i.recv(Buffer_lenght)
-					if not data: connected = False; break
+					if not data: connected = False;break 
 					if i is sockt:
 						client.send(data)
 					else:
 						sockt.send(data)
-				except Exception as e:pass
-					#self.logs(f'{R} {e}{GR}')
-					#connected = False;break
+				except Exception as e:
+					self.logs(f'{R} {e}{GR}')
+					connected = False;break
 		client.close()
 		sockt.close()
-		#os.system('sudo python3 pidkill.py Disconnect')
+		os.system("sudo python3 pidkill.py")
 	def destination(self,client, address):
+	    mode = int(self.conn_mode(self.conf()))
 	    try:
 	        self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
-	        request = client.recv(9124).decode()
+	        request = client.recv(1024).decode()
 	        host = self.gethost(self.conf())
 	        port = request.split(':')[-1].split()[0]
 	        try:
@@ -69,42 +71,31 @@ class Tun(injector):
 	        except ValueError:
 	        	proxip = host
 	        	proxport = port
-	        s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	        s.settimeout(10)
-	        s.connect((proxip,int(proxport)))
+	        sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	        sockt.settimeout(10)
+	        sockt.connect((proxip,int(proxport)))
 	        self.logs(f'{O}[TCP] {G}connected to {proxip}:{proxport}{GR}')
-	        if int(self.conn_mode(self.conf())) == 2:
+	       
+	        if mode == 2 or mode == 3  :
 	        	SNI_HOST = self.extraxt_sni(self.conf())
 	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-	        	s = context.wrap_socket(s,server_hostname=str(SNI_HOST))
-	        	context.verify_mode  = ssl.CERT_REQUIRED
-	        	context.load_verify_locations(
-	        	cafile=os.path.relpath(certifi.where()),
-	        	capath=None,cadata=None)
-	        	self.logs(f'{O}[TCP] Handshaked successfully to {SNI_HOST}{GR}')
-	        	try:
-	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} C={s.getpeercert()["subject"][1][0][1]}, ST={s.getpeercert()["subject"][1][0][1]} , L={s.getpeercert()["subject"][2][0][1]} , O={s.getpeercert()["subject"][3][0][1]} , CN={s.getpeercert()["subject"][4][0][1]}  {GR}''')
-	        	except:
-	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} {s.getpeercert()["subject"]}''')
-	        	client.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
-	        elif int(self.conn_mode(self.conf())) == 3:
-	        	SNI_HOST = self.extraxt_sni(self.conf())
-	        	context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-	        	s = context.wrap_socket(s,server_hostname=str(SNI_HOST))
+	        	sockt = context.wrap_socket(sockt,server_hostname=str(SNI_HOST))
 	        	context.verify_mode  = ssl.CERT_REQUIRED
 	        	context.load_verify_locations(
 	        	cafile=os.path.relpath(certifi.where()),
 	        	capath=None,cadata=None)
 	        	self.logs(f'Handshaked successfully to {SNI_HOST}')
 	        	try:
-	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} C={s.getpeercert()["subject"][1][0][1]}, ST={s.getpeercert()["subject"][1][0][1]} , L={s.getpeercert()["subject"][2][0][1]} , O={s.getpeercert()["subject"][3][0][1]} , CN={s.getpeercert()["subject"][4][0][1]}  {GR}''')
+	        		self.logs(f'''{O}[TCP] Protocol :{G}{sockt.version()}\n{O}Ciphersuite :{G} {sockt.cipher()[0]}\n{O}Peerprincipal:{G} C={sockt.getpeercert()["subject"][1][0][1]}, ST={sockt.getpeercert()["subject"][1][0][1]} , L={sockt.getpeercert()["subject"][2][0][1]} , O={sockt.getpeercert()["subject"][3][0][1]} , CN={sockt.getpeercert()["subject"][4][0][1]}  {GR}''')
 	        	except:
-	        		self.logs(f'''{O}[TCP] Protocol :{G}{s.version()}\n{O}Ciphersuite :{G} {s.cipher()[0]}\n{O}Peerprincipal:{G} {s.getpeercert()["subject"]}''')
-	        	injector.connection(self,client, s,str(host),str(port))
-	        else:
-	        	injector.connection(self,client, s,str(host),str(port))
-	       
-	        self.tunneling(client,s)
+	        		self.logs(f'''{O}[TCP] Protocol :{G}{sockt.version()}\n{O}Ciphersuite :{G} {sockt.cipher()[0]}\n{O}Peerprincipal:{G} {sockt.getpeercert()["subject"]}''')
+	        	
+	        if mode == 2:
+	        	client.send(b"HTTP/1.1 200 OK\r\n\r\n")
+	        packet = injector.connection(self,client, sockt,str(host),str(port))
+	        
+	        if packet:
+	            self.tunneling(client,sockt,packet)
 	    except Exception as e:
 	    	self.logs(f'{e}')
 	def create_connection(self):
@@ -130,8 +121,8 @@ class Tun(injector):
 	        while True:
 	            try:
 	              client, address = sockt.accept()
-	              thr = threading.Thread(target=self.destination, args=(client, address))
-	              thr.start()
+	              
+	              self.destination(client,address)
 	            except :
 	               sockt.close()
 	               break

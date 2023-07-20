@@ -37,8 +37,8 @@ class injector():
 		mode = config['mode']['connection_mode']
 		return mode
 
-	def auto_rep(self,config):
-		result = config['config']['auto_replace']
+	def auto_rep(self):
+		result = self.conf()['mode']['auto_replace']
 		return result
 	
 
@@ -71,7 +71,8 @@ class injector():
 		return payload
 
 	def connection(self,client, server,host,port):
-	        if int(self.conn_mode(self.conf())) == 0:
+	        mode = int(self.conn_mode(self.conf()))
+	        if  mode == 0 or mode ==2:
 	        	return self.get_resp(server=server,client=client)
 	        			       
 	        else:
@@ -81,26 +82,24 @@ class injector():
 	              if payload in ['1.0','1.5','0.0'] :
 	                time.sleep(float(payload))
 	              else:
-	                self.logs(f'{O} sending payload : {payload.encode()}{GR}')
-	                server.send(payload.encode())
+	                payload = payload.encode()
+	                self.logs(f'{O} sending payload : {payload}{GR}')
+	                server.send(payload)
+	                
 	        return self.get_resp(server=server,client=client)
+	    	
 
 	def get_resp(self,server,client) :
 		packet = server.recv(1024)
-		print(str(packet) +"\n---------------------")
-		status = packet.decode('utf-8','ignore').split('\r\n')
-		response = status[0]
-		packetsplit = [data for data in packet.split(b'\r\n\r\n') if data.split(b'-')[0]==b"SSH"]	
-		if packetsplit:
-				response = packetsplit[0].decode('utf-8',"ignore").split('\r\n')[0]
-				self.logs(f'response : {response}')
-				client.send(packetsplit[0])
-					
-				return True
+		status = packet.decode('utf-8','ignore').split('\r\n\r\n')[0]
+		response = status.split('\r\n')[0]
+		if status.split("-")[0] =="SSH":
+				self.logs(f'response : {response}')					
+				return packet
 		else:
-				if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status[0]):
+				if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
 					self.logs(f'response : {response}')
-					client.send(b'HTTP/1.1 200 ok\r\nContent-Lenght: 999999999\r\n\r\n')
+					client.send(b'HTTP/1.1 200 OK \r\n\r\n')
 					return self.get_resp(server,client)
 	
 	def logs(self,log):
