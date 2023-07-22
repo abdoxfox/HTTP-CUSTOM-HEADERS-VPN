@@ -99,7 +99,7 @@ class injector():
 		else:
 				if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
 					self.logs(f'response : {response}')
-					client.send(b'HTTP/1.1 200 OK \r\n\r\n')
+					client.send(b'HTTP/1.1 200 OK\r\n\r\n')
 					return self.get_resp(server,client)
 	
 	def logs(self,log):
