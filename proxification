@@ -29,7 +29,6 @@ iptables -t nat -A PROXY -p tcp --dport 53 -j DNAT --to-destination 127.0.0.1:53
 
 svc wifi enable
 
-
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
 pkill dnsmasq
