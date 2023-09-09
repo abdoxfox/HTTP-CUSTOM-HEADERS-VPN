@@ -30,7 +30,6 @@ chmod 777 dns2socks
 cp dns2socks "$PREFIX"/bin
 sleep 3
 fi
-cd ..
 rm -rf redsocks
 rm -rf dns2socks
 EOF
@@ -45,7 +44,7 @@ mode=$(cat settings.ini |grep "connection_mode"| awk '{print $3}')
 
 killprocess() {
 echo -e "${RED}[+] KILLING PROCESS...." 
-sudo python pidkill.py 
+sudo python3 pidkill.py 
 echo -e "[+] DONE ${SCOLOR}"
 }
 
@@ -54,45 +53,30 @@ function connect() {
 
 	if [ $mode = 0 ] 
         then
-           screen -AmdS nohup python3 ssh.py 0 _
-        elif [ $mode = "1" ]
+           python3 ssh.py 0 _
+        elif [ $mode = "1" ] || [ $mode = "3" ]
 	  then
                screen -AmdS nohup python3 tunnel.py $localport
                sleep 1
-               screen -AmdS nohub sudo python3 ssh.py 1 $localport
-	elif [ "$mode" = '2' ] || [ "$mode" = '3' ]
+               python3 ssh.py 2 $localport
+	elif [ "$mode" = '2' ] 
 		then 
 			screen -AmdS nohup python3 tunnel.py $localport
                         sleep 1
-			screen -AmdS pythonwe python3 ssh.py 1  $localport 
+			python3 ssh.py 2  $localport 
 	else
 	  echo "${RED}mode ${mode} is not listed ${SCOLOR} "
 		exit
 	fi
-
-	echo -e "${YELLOW}---logs----${SCOLOR}"
-
-	sleep 10
-	cat logs.txt
-
-	var=`cat logs.txt |tail -n 1 | grep "CONNECTED SUCCESSFULLY"|awk '{print $2}'`
-        
-	if [ "$var" = "SUCCESSFULLY" ];then 
-		echo -e "${GREEN}---Tunneling  starts-----${SCOLOR}"
-		chmod +x proxification
-		sudo ./proxification > /dev/null
-		sudo iptables -t nat -F OUTPUT
-		       
-               
-	else
-		echo -e "${RED}Failed to connect ... Try again${SCOLOR}"
-	fi
+	
+	
+	
 }
-connect 9089
-for i in {9091..9099}
+for i in {9089..9099}
 do 
 	rm -rf logs.txt
-	killprocess
 	connect $i 
+    killprocess
+    sudo iptables -t nat -F OUTPUT
 done
 

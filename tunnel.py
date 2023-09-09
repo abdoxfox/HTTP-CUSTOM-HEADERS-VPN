@@ -25,20 +25,25 @@ class Tun(injector):
 		except Exception as e:
 			self.logs(e)
 		return config
+		
 	def extraxt_sni(self,config):
 		sni = config['sni']['server_name']
 		return sni
+		
 	def gethost(self,config):
 		host=config['ssh']['host']
 		return host
+		
 	def proxy(self,config):
 	    proxyhost = config['config']['proxyip']
 	    proxyport = int(config['config']['proxyport'])
 	    return [proxyhost,proxyport]
+	    
 	def conn_mode(self,config):
 		mode = config['mode']['connection_mode']
 		return mode
-	def tunneling(self,client,sockt, packet):
+		
+	def tunneling(self,client,sockt,packet):
 		client.send(packet)
 		connected = True
 		while connected == True:
@@ -57,11 +62,12 @@ class Tun(injector):
 					connected = False;break
 		client.close()
 		sockt.close()
-		os.system("sudo python3 pidkill.py")
+		os.system('sudo pkill redsocks')
+		
 	def destination(self,client, address):
 	    mode = int(self.conn_mode(self.conf()))
 	    try:
-	        self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
+	        #self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
 	        request = client.recv(1024).decode()
 	        host = self.gethost(self.conf())
 	        port = request.split(':')[-1].split()[0]
@@ -93,9 +99,8 @@ class Tun(injector):
 	        if mode == 2:
 	        	client.send(b"HTTP/1.1 200 OK\r\n\r\n")
 	        packet = injector.connection(self,client, sockt,str(host),str(port))
-	        
 	        if packet:
-	            self.tunneling(client,sockt,packet)
+	        	self.tunneling(client,sockt,packet)
 	    except Exception as e:
 	    	self.logs(f'{e}')
 	def create_connection(self):
@@ -119,13 +124,12 @@ class Tun(injector):
 	          pass
 	        self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
 	        while True:
-	            try:
-	              client, address = sockt.accept()
-	              
-	              self.destination(client,address)
-	            except :
-	               sockt.close()
-	               break
+		        try:
+		           client, address = sockt.accept()
+		           self.destination(client,address)
+		        except :
+		           sockt.close()
+		           break
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
@@ -134,3 +138,5 @@ class Tun(injector):
 if __name__=='__main__':
 	start = Tun()
 	start.create_connection()
+
+

@@ -17,6 +17,7 @@ class sshRunn:
 	def __init__(self,inject_port,):
 		self.inject_host = '127.0.0.1'
 		self.inject_port = inject_port
+		self.connected = False
 		
 
 	def ssh_client(self,socks5_port,host,port,user,password,mode):
@@ -45,16 +46,16 @@ class sshRunn:
 				else:compress =""
 				response = subprocess.Popen(
 				(
-	                   f'sshpass -p {password} ssh {compress} {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} ' + '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
-	                   
+	                   f'sshpass -p {password} ssh {compress} {proxycmd} {username}@{host} -p {port} -v {dynamic_port_forwarding} -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 	              ),
+	             # timeout=5,
 	              shell=True,
 	              stdout=subprocess.PIPE,
 	              stderr=subprocess.STDOUT)
 				
 				for line in response.stdout:
 					line = line.decode('utf-8',errors='ignore')
-					print(line)
+					#print(line)
 					
 					if 'compat_banner: no match:' in line:
 						self.logs(f"{G}handshake starts\nserver :{line.split(':')[2]}")
@@ -65,19 +66,28 @@ class sshRunn:
 					 
 					elif 'Next authentication method: password' in line:self.logs(G+'Authenticate to password'+GR)
 					elif 'Authentication succeeded (password).' in line:self.logs('Authentication Comleted')
-					elif 'pledge: proc' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
-					elif 'pledge: network' in line:self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
+					elif 'pledge: proc' in line:
+						self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
+						self.connected= True
+					elif 'pledge: network' in line:
+						self.logs(G+'CONNECTED SUCCESSFULLY '+GR)
+						self.connected=True #os.system("chmod +x proxification && sudo bash proxification")
+		   
 					elif 'Permission denied' in line:self.logs(R+'username or password are inncorect '+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed ' +GR)
-					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR);
-					elif "client_loop: send disconnect:" in line:
-					    os.system('sudo python3 pidkill.py ')
-					
+					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR)
+					#elif "client_loop: send disconnect:" in line:
+					elif self.connected:
+					    os.system("cat logs.txt && sudo bash proxification >/dev/null")
+					    self.connected=False
+					    break		
 					
 			except KeyboardInterrupt:
+			    return 
+			    
+			if not self.connected:
+					    os.system('cat logs.txt')
 			
-			    sys.exit('stoping ..')
-
 	def create_connection(self,host,port,user,password,mode):
 		global soc , payload
 		try:
@@ -88,12 +98,13 @@ class sshRunn:
 		    	except:
 		  		  ip = host 						
 		    sockslocalport  = 1080
-		    sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,ip,port,user,password,mode))
-		    sshthread.start()
+		    return self.ssh_client(sockslocalport,ip,port,user,password,mode)
+		    #sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,ip,port,user,password,mode))
+		   # sshthread.start()
 		except ConnectionRefusedError:     
 		    self.logs("CONNECTION REFUSED")	      
 		except KeyboardInterrupt :
-		    self.logs(R+'ssh stopped'+GR)
+		    self.logs(R+'User Abort!'+GR)
 		    
 	def logs(self,log):
 	   		with open('logs.txt','a') as file:
@@ -110,6 +121,7 @@ class sshRunn:
 		self.enableCompress = config['ssh']['enable_compression']
 		self.create_connection(host,port,user,password,mode)
 	
+
 localport= sys.argv[2]
 start = sshRunn(localport)
 start.main()
