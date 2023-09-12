@@ -1,5 +1,5 @@
 #!/system/bin/sh
-
+pkill dnsmasq
 # Clear existing iptables rules
 iptables -t nat -F
 iptables -t nat -X
@@ -31,5 +31,5 @@ svc wifi enable
 
 trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
 
-pkill dnsmasq
+
 screen -Amds nohup dns2socks 127.0.0.1:1080 1.1.1.1:53  > /dev/null & sleep 5 & redsocksv -c redsocks.conf 

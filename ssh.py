@@ -80,12 +80,12 @@ class sshRunn:
 					elif self.connected:
 					    os.system("cat logs.txt && sudo bash proxification >/dev/null")
 					    self.connected=False
-					    break		
+					    return		
 					
 			except KeyboardInterrupt:
 			    return 
 			    
-			if not self.connected:
+			if self.connected==False:
 					    os.system('cat logs.txt')
 			
 	def create_connection(self,host,port,user,password,mode):

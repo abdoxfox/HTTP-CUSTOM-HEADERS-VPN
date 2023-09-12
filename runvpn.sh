@@ -44,10 +44,15 @@ mode=$(cat settings.ini |grep "connection_mode"| awk '{print $3}')
 
 killprocess() {
 echo -e "${RED}[+] KILLING PROCESS...." 
-sudo python3 pidkill.py 
+sudo pkill ssh
+sudo pkill redsocksv
+sudo pkill screen
 echo -e "[+] DONE ${SCOLOR}"
 }
-
+function serverlistening() {
+    localport="$1"
+    screen -AmdS nohup python3 tunnel.py $localport
+}
 function connect() {
         localport="$1"
 
@@ -56,13 +61,12 @@ function connect() {
            python3 ssh.py 0 _
         elif [ $mode = "1" ] || [ $mode = "3" ]
 	  then
-               screen -AmdS nohup python3 tunnel.py $localport
+               
                sleep 1
                python3 ssh.py 2 $localport
 	elif [ "$mode" = '2' ] 
 		then 
-			screen -AmdS nohup python3 tunnel.py $localport
-                        sleep 1
+			
 			python3 ssh.py 2  $localport 
 	else
 	  echo "${RED}mode ${mode} is not listed ${SCOLOR} "
@@ -75,8 +79,11 @@ function connect() {
 for i in {9089..9099}
 do 
 	rm -rf logs.txt
+	serverlistening $i
+	sleep 1
 	connect $i 
     killprocess
-    sudo iptables -t nat -F OUTPUT
+    sudo iptables -t nat -F
+    sudo iptables -t nat -X
 done
 
