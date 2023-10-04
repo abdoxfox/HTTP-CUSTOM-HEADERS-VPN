@@ -63,7 +63,7 @@ function connect() {
 	  then
                
                sleep 1
-               python3 ssh.py 2 $localport
+               python3 ssh.py 1 $localport
 	elif [ "$mode" = '2' ] 
 		then 
 			
