@@ -1,0 +1,55 @@
+#!/system/bin/sh
+pkill dnsmasq
+# Clear existing iptables rules
+iptables -t nat -F
+iptables -t nat -X
+
+# Create a new chain
+iptables -t nat -N PROXY
+iptables -t nat -I OUTPUT -j PROXY
+
+# Exclude local and reserved IP ranges from redirection
+iptables -t nat -A PROXY -d 127.0.0.0/8 -j RETURN
+iptables -t nat -A PROXY -d 192.168.0.0/16 -j RETURN
+iptables -t nat -A PROXY -d 0.0.0.0/8 -j RETURN
+iptables -t nat -A PROXY -d 10.0.0.0/8 -j RETURN
+iptables -t nat -A PROXY -d 169.254.0.0/16 -j RETURN
+iptables -t nat -A PROXY -d 172.16.0.0/12 -j RETURN
+iptables -t nat -A PROXY -d 224.0.0.0/4 -j RETURN
+iptables -t nat -A PROXY -d 240.0.0.0/4 -j RETURN
+
+# Redirect all TCP traffic to the SOCKS proxy
+interface=$(ip -o -4 route show  | awk '{print $3}')
+ipget=$(ip -o -4 route show  | awk '{print $9}')
+if [[ $interface = "wlan0" ]] ;then
+echo "ok"
+   # iptables -t nat -A PROXY -p tcp --dport 53 -j DNAT --to-destination "$ip":5300
+   # iptables -t nat -A PROXY -p udp -j DNAT --to-destination $ip:5300
+     ip=127.0.0.1
+else
+    iptables -t nat -A PROXY -p tcp --dport 53 -j REDIRECT --to-ports 5300
+    iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 5300
+    ip="127.0.0.1"
+fi
+
+
+# Redirect DNS traffic to local DNS resolver (adjust the IP and port)
+
+
+# Enable Wi-Fi tethering (you may need to adapt this part based on your device's tethering settings)
+
+ifconfig ap0 192.168.43.1
+svc wifi enable
+svc tether enable
+
+
+iptables -t nat -A PROXY -p tcp -j DNAT --to-destination $ip:8123
+#iptables -t nat -A PROXY -p udp -j DNAT --to-destination $ip:7300
+
+trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
+
+screen -Amds nohup redsocks -c vpn/redsocks.conf
+
+dns2socks 127.0.0.1:1080 1.1.1.1:53 "$ip":5300 >/dev/null
+
+ 
