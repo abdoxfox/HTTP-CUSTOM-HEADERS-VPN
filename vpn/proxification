@@ -22,7 +22,7 @@ iptables -t nat -A PROXY -d 240.0.0.0/4 -j RETURN
 interface=$(ip -o -4 route show  | awk '{print $3}')
 ipget=$(ip -o -4 route show  | awk '{print $9}')
 if [[ $interface = "wlan0" ]] ;then
-echo "ok"
+
    # iptables -t nat -A PROXY -p tcp --dport 53 -j DNAT --to-destination "$ip":5300
    # iptables -t nat -A PROXY -p udp -j DNAT --to-destination $ip:5300
      ip=127.0.0.1
