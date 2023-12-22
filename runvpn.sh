@@ -22,22 +22,26 @@ cd redsocks
 make
 mv redsocks ../redsocks
 cp redsocks "$PREFIX"/bin
+cd ..
 fi
 if ! command -v dns2socks >/dev/null
 then
 unzip libs/dns2socks.zip
 cd dns2socks
 make
-chmod 777 dns2socks
 cp dns2socks "$PREFIX"/bin
 sleep 3
 fi
-rm -rf redsocks
-rm -rf dns2socks
+cd ..
+rm -rf redsocks/
+rm -rf dns2socks/
+
 EOF
 
 bash rSetup.sh
 rm rSetup.sh
+
+
 
 clear
 
