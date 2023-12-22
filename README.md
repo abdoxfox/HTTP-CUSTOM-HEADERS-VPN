@@ -31,7 +31,7 @@ pip install certifi
 git clone https://github.com/abdoxfox/HTTP-CUSTOM-HEADERS-VPN.git
 cd HTTP-CUSTOM-HEADERS-VPN
 ```
-[+] - and fill the settings.ini file:
+[+] - and fill the `cfgs/settings.ini` file:
 * choose your connection mode:
 
     mode 0 : ssh direct
