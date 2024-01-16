@@ -5,13 +5,13 @@ import threading
 from .inject import injector
 import configparser
 import ssl,os,certifi,sys
-from .pidkill import *
+from pidkill import *
 bg=''
 G = bg+'\033[32m'
 O = bg+'\033[33m'
 GR = bg+'\033[37m'
 R = bg+'\033[31m'
-Buffer_lenght = 4096 * 4
+Buffer_lenght = 1024 * 4
 
 class Tun(injector):
 	def __init__(self):
@@ -44,8 +44,8 @@ class Tun(injector):
 		mode = config['mode']['connection_mode']
 		return mode
 		
-	def tunneling(self,client,sockt,packet):
-		client.send(packet)
+	def tunneling(self,client,sockt):
+		
 		connected = True
 		while connected == True:
 			r, _, x = select.select([client,sockt], [], [client,sockt],3)
@@ -54,7 +54,7 @@ class Tun(injector):
 				try:
 					data = i.recv(Buffer_lenght)
 					
-					if not data: connected = False;break 
+					#if not data: connected = False;break
 					if i is sockt:
 						client.send(data)
 					else:
@@ -66,13 +66,14 @@ class Tun(injector):
 		sockt.close()
 		self.logs("**connection reset by peer")
 		#os.system('sudo python pidkill.py')
-		return handler('dns2socks')
+		return handler("dns2socks")
+		sys.exit();
 		
 	def destination(self,client, address):
 	    mode = int(self.conn_mode(self.conf()))
 	    try:
 	        #self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
-	        request = client.recv(1024).decode()
+	        request = client.recv(1024*4).decode()
 	        host = self.gethost(self.conf())
 	        port = request.split(':')[-1].split()[0]
 	        try:
@@ -104,7 +105,7 @@ class Tun(injector):
 	        	client.send(b"HTTP/1.1 200 OK\r\n\r\n")
 	        packet = injector.connection(self,client, sockt,str(host),str(port))
 	        if packet:
-	        	self.tunneling(client,sockt,packet)
+	        	self.tunneling(client,sockt)
 	    except Exception as e:
 	    	self.logs(f'{e}')
 	def create_connection(self):
@@ -123,17 +124,13 @@ class Tun(injector):
 	        except OSError as msg:
 	            self.logs(str(msg))
 	            sockt.close()
-                    
-	        if sockt:
-	          pass
 	        self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
 	        while True:
 		        try:
 		           client, address = sockt.accept()
 		           self.destination(client,address)
 		        except :
-		           sockt.close()
-		           break
+		           return handler(self.LISTEN_PORT)
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]

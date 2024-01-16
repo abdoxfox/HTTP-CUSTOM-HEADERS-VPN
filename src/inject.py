@@ -94,12 +94,13 @@ class injector():
 		status = packet.decode('utf-8','ignore').split('\r\n\r\n')[0]
 		response = status.split('\r\n')[0]
 		if status.split("-")[0] =="SSH":
-				self.logs(f'response : {response}')					
-				return packet
+				self.logs(f'response : {response}')
+				return client.send(packet)
+				
 		else:
 				if re.match(r'HTTP/\d(\.\d)? \d\d\d ',status):
 					self.logs(f'response : {response}')
-					client.send(b'HTTP/1.1 200 OK ')
+					client.send(b'HTTP/1.1 200 ok\r\n')
 					return self.get_resp(server,client)
 	
 	def logs(self,log):
