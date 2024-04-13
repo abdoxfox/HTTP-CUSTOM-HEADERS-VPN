@@ -50,16 +50,18 @@ mode=$(cat cfgs/settings.ini |grep "connection_mode"| awk '{print $3}')
 
 killprocess() {
 echo -e "${RED}[+] KILLING PROCESS...." 
-sudo pkill ssh
-sudo pkill redsocks
-sudo pkill dns2socks
-sudo pkill screen
+lport=$1
+pid=$(sudo netstat -anp|grep "$lport" | awk '{print$7}' | grep "python3"|sed -e 's/\/python3//g'|tail -1)
+kill "$pid"
+pkill ssh
+pkill redsocks
+pkill dns2socks
 
 echo -e "[+] DONE ${SCOLOR}"
 }
 function serverlistening() {
     localport="$1"
-    screen -AmdS nohup python3 __init__.py $localport
+    screen -AmdS nohup python3 main.py $localport
 }
 function connect() {
         localport="$1"
@@ -69,11 +71,11 @@ function connect() {
            python3 src/ssh.py 0 _
         elif [ $mode = "1" ] || [ $mode = "3" ]
 	  then
-               python3 src/ssh.py 1 $localport
+               python3 src/ssh.py 2 $localport
 	elif [ "$mode" = '2' ] 
 		then 
 			
-			python3 src/ssh.py 2  $localport 
+			python3 src/ssh.py 1 $localport 
 	else
 	  echo "${RED}mode ${mode} is not listed ${SCOLOR} "
 		exit
@@ -82,16 +84,17 @@ function connect() {
 	
 	
 }
-for i in {9000..9999}
+for i in {9008..9999}
 do 
-    clear
+   # clear
     echo "$GREEN ++++ LOGS ++++$SCOLOR"
 	rm -rf logs.txt
+	
 	serverlistening $i
 	sleep 1
 	connect $i 
-    killprocess
-    sudo iptables -t nat -F
+    killprocess $i
+    sudo iptables -t nat -F 
     sudo iptables -t nat -X
 done
 
