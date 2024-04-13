@@ -71,7 +71,7 @@ function connect() {
            python3 src/ssh.py 0 _
         elif [ $mode = "1" ] || [ $mode = "3" ]
 	  then
-               python3 src/ssh.py 2 $localport
+               python3 src/ssh.py 1 $localport
 	elif [ "$mode" = '2' ] 
 		then 
 			
