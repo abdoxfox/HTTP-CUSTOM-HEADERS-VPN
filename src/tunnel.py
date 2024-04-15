@@ -49,12 +49,12 @@ class Tun(injector):
 		connected = True
 		while connected == True:
 			r, _, x = select.select([client,sockt], [], [client,sockt],3)
-			if x: connected = False; break
+			#if x: connected = False; break
 			for i in r:
 				try:
 					data = i.recv(Buffer_lenght)
 					
-					#if not data: connected = False;break
+					if not data: connected = False;break
 					if i is sockt:
 						client.send(data)
 					else:
@@ -65,14 +65,13 @@ class Tun(injector):
 		client.close()
 		sockt.close()
 		self.logs("**connection reset by peer")
-		#os.system('sudo python pidkill.py')
 		return handler("dns2socks")
 		sys.exit();
 		
 	def destination(self,client, address):
 	    mode = int(self.conn_mode(self.conf()))
 	    try:
-	        #self.logs(G+'<#> Client {} received!{}'.format(address[-1],GR)) 
+	        
 	        request = client.recv(1024*4).decode()
 	        host = self.gethost(self.conf())
 	        port = request.split(':')[-1].split()[0]
@@ -109,28 +108,19 @@ class Tun(injector):
 	    except Exception as e:
 	    	self.logs(f'{e}')
 	def create_connection(self):
-	    
-	    for res in socket.getaddrinfo(self.localip, self.LISTEN_PORT, socket.AF_UNSPEC,socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
-	        af, socktype, proto, canonname, sa = res
+	    sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
+	    localAddress = socket.gethostbyname("localhost")
+	    print(localAddress)
+	    sockt.bind((localAddress,self.LISTEN_PORT))
+	    sockt.listen(0)
+	    while True:
 	        try:
-	            sockt = socket.socket(af, socktype, proto)
-	        except OSError as msg:
-	            self.logs(str(msg))
-	            continue
-	        try:
-	           localAddress = socket.gethostbyname("localhost")
-	           sockt.bind((localAddress,self.LISTEN_PORT))
-	           sockt.listen(1)
-	        except OSError as msg:
-	            self.logs(str(msg))
-	            sockt.close()
-	        self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
-	        while True:
-		        try:
-		           client, address = sockt.accept()
-		           self.destination(client,address)
-		        except :
-		           return handler(self.LISTEN_PORT)
+	            client, address = sockt.accept()
+	            self.destination(client,address)
+	        except :
+		           #return handler(str(self.LISTEN_PORT))
+		           pass
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
