@@ -1,16 +1,11 @@
-#!/system/bin/sh
-pkill dnsmasq
-# Clear existing iptables rules
-iptables -t nat -F
-iptables -t nat -X
-
+#!/bin/bash
 # Create a new chain
 iptables -t nat -N PROXY
 iptables -t nat -I OUTPUT -j PROXY
+pkill dnsmasq
 
 # Exclude local and reserved IP ranges from redirection
 iptables -t nat -A PROXY -d 127.0.0.0/8 -j RETURN
-iptables -t nat -A PROXY -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A PROXY -d 0.0.0.0/8 -j RETURN
 iptables -t nat -A PROXY -d 10.0.0.0/8 -j RETURN
 iptables -t nat -A PROXY -d 169.254.0.0/16 -j RETURN
@@ -18,38 +13,54 @@ iptables -t nat -A PROXY -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A PROXY -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A PROXY -d 240.0.0.0/4 -j RETURN
 
-# Redirect all TCP traffic to the SOCKS proxy
-interface=$(ip -o -4 route show  | awk '{print $3}')
-ipget=$(ip -o -4 route show  | awk '{print $9}')
-if [[ $interface = "wlan0" ]] ;then
-
-   # iptables -t nat -A PROXY -p tcp --dport 53 -j DNAT --to-destination "$ip":5300
-   # iptables -t nat -A PROXY -p udp -j DNAT --to-destination $ip:5300
-     ip=$ipget
+# Forward packets between interfaces
+interface=$(ip -o -4 route show  | awk '{print $3}'| tail -1)
+localip=$(ip r | head -1| awk '{print$9}')
+if [ $interface = "wlan0" ]; then
+    dnsPort1=53
+    dnsIP="0.0.0.0"
+    iptables -t nat -A PROXY -d 192.168.0.0/16 -j RETURN
+    iptables -t nat -A PROXY -p tcp --dport 53 -j DNAT --to-destination $dnsIP:$dnsPort1
+    iptables -t nat -A PROXY -p udp --dport 53 -j DNAT --to-destination $dnsIP:$dnsPort1
 else
-    iptables -t nat -A PROXY -p tcp --dport 53 -j REDIRECT --to-ports 5300
-    iptables -t nat -A PROXY -p udp --dport 53 -j REDIRECT --to-ports 5300
-    ip="127.0.0.1"
+
+    dnsPort1=5333
+    dnsIP="127.0.0.1"
+    iptables -t nat -A PROXY -p tcp --dport 53 -j DNAT --to-destination $dnsIP:$dnsPort1
+    iptables -t nat -A PROXY -p udp --dport 53 -j DNAT --to-destination $dnsIP:$dnsPort1
+
 fi
+# Redirect all TCP traffic to the SOCKS proxy
+iptables -t nat -A PROXY -p tcp -j DNAT --to-destination 127.0.0.1:8123
 
+# Clean up rules when the script exits
+cleanup() {
+    iptables -t nat -D OUTPUT -j PROXY
+    iptables -t nat -F PROXY
+    iptables -t nat -X PROXY
+    
 
-# Redirect DNS traffic to local DNS resolver (adjust the IP and port)
+}
+trap cleanup EXIT
 
+# Start redsocks in the background
+cat << EOF > vpn/redsocks.conf
+base {
+    log_debug = off;
+    log_info = on;
+    redirector = iptables;
+}
+redsocks {
+    local_ip = 127.0.0.1;
+    local_port = 8123;
+    ip = 127.0.0.1;
+    port = 1080;
+    type = socks5;
+}
+EOF
 
-# Enable Wi-Fi tethering (you may need to adapt this part based on your device's tethering settings)
+sleep 1
+# Start redsocks
+screen -Amds nohub redsocks -c vpn/redsocks.conf
 
-ifconfig ap0 192.168.43.1
-svc wifi enable
-svc tether enable
-
-
-iptables -t nat -A PROXY -p tcp -j DNAT --to-destination $ip:8123
-#iptables -t nat -A PROXY -p udp -j DNAT --to-destination $ip:7300
-
-trap "iptables -t nat -D OUTPUT -j PROXY; iptables -t nat -F PROXY; iptables -t nat -X PROXY" EXIT
-
-screen -Amds nohup redsocks -c vpn/redsocks.conf
-
-dns2socks 127.0.0.1:1080 1.1.1.1:53 "$ip":5300 >/dev/null
-
- 
+dns2socks 127.0.0.1:1080 8.8.8.8:53 $dnsIP:$dnsPort1 >/dev/null 
