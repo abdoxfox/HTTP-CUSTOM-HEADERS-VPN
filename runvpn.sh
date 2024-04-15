@@ -71,7 +71,7 @@ function connect() {
            python3 src/ssh.py 0 _
         elif [ $mode = "1" ] || [ $mode = "3" ]
 	  then
-               python3 src/ssh.py 1 $localport
+               python3 src/ssh.py 2 $localport
 	elif [ "$mode" = '2' ] 
 		then 
 			
@@ -94,7 +94,6 @@ do
 	sleep 1
 	connect $i 
     killprocess $i
-    sudo iptables -t nat -F 
-    sudo iptables -t nat -X
+   
 done
 

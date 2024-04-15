@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cat << EOF > configFile
+Host host1
+    HostName $1
+    User $2
+    
+EOF
+
+chmod 600 configFile
