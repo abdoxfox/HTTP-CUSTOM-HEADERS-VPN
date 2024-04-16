@@ -52,12 +52,12 @@ class sshRunn:
 				    
 				if str(auth_methode) == "publickey":
 				    
-				    sshcmd = f"ssh -i {password}"
+				    sshcmd = f"ssh -i {password} publickey.pem {proxycmd} useless@{host}"
 				else:
-				    sshcmd = f"sshpass -p {password} ssh"
+				    sshcmd = f"sshpass -p {password} ssh {proxycmd} -F configFile host1"
 				response = subprocess.Popen(
 				(
-	                   f'{sshcmd} {compress} {proxycmd} -F configFile host1 -p {port} -v {dynamic_port_forwarding} -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+	                   f'{sshcmd} {compress} -p {port} -v {dynamic_port_forwarding} -o ConnectTimeout=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 	              ),
 	              shell=True,
 	              stdout=subprocess.PIPE,
@@ -93,7 +93,8 @@ class sshRunn:
 					
 					    
 					    return 		
-			except KeyboardInterrupt:
+			except Exception as e:
+			    self.logs(e)
 			    return 
 			    
 			if self.connected==False:
@@ -122,6 +123,7 @@ class sshRunn:
 	   			file.write(log+'\n')
 	
 	def main(self):
+        
 		currentdir = os.path.abspath(os.path.curdir)
 		config = configparser.ConfigParser()
 		config.read_file(open(f'{currentdir}/cfgs/settings.ini'))	
@@ -134,6 +136,7 @@ class sshRunn:
 		auth_methode = config['ssh']['auth_methode']
 		_ = subprocess.run(["sh","ConfMake",host,user])
 		self.create_connection(host,port,user,password,mode,auth_methode)
+    
 	
 
 localport= sys.argv[2]
