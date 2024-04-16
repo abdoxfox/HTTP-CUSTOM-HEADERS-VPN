@@ -93,8 +93,8 @@ class sshRunn:
 					
 					    
 					    return 		
-			except Exception as e:
-			    self.logs(e)
+			except KeyboardInterrupt:
+			   
 			    return 
 			    
 			if self.connected==False:
@@ -102,16 +102,10 @@ class sshRunn:
 			
 	def create_connection(self,host,port,user,password,mode,auth_methode ):
 		global soc , payload
-		try:
-		    regx = r'[a-zA-Z0-9_]'
-		    if re.match(regx,host):
-		    	try:
-		    		ip = socket.gethostbyname(host)
-		    	except:
-		  		  ip = host 						
+		try:					
 		    sockslocalport  = 1080
 		    
-		    sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,ip,port,user,password,mode, auth_methode))
+		    sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,host,port,user,password,mode, auth_methode))
 		    sshthread.start()
 		except ConnectionRefusedError:     
 		    self.logs("CONNECTION REFUSED")	      
