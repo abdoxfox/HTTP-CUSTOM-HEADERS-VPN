@@ -26,21 +26,16 @@ class injector():
 		return config
 
 	def getpayload(self,config):
-		payload = config['config']['payload']
+		payload = config['Payload']['payload']
 		return payload 
 
 	def proxy(self,config):
-	    proxyhost = config['config']['proxyip']
-	    proxyport = int(config['config']['proxyport'])
+	    proxyhost = config['Payload']['proxyip']
+	    proxyport = int(config['Payload']['proxyport'])
 	    return [proxyhost,proxyport]
 	def conn_mode(self,config):
 		mode = config['mode']['connection_mode']
 		return mode
-
-	def auto_rep(self,config):
-		result = config['config']['auto_replace']
-		return result
-	
 
 
 	def payloadformating(self,payload,host,port):
@@ -67,7 +62,7 @@ class injector():
 		payload = payload.replace('[auth]','')
 		payload = payload.replace('[split]' ,'=1.0=')
 		payload = payload.replace('[delay_split]'  ,'=1.5=')
-		payload = payload.replace('[instant_split]','=0.0=')
+		payload = payload.replace('[instant_split]','=0.1=')
 		return payload
 
 	def connection(self,client, server,host,port):
@@ -81,7 +76,7 @@ class injector():
 	              if payload in ['1.0','1.5','0.0'] :
 	                time.sleep(float(payload))
 	              else:
-	                self.logs(f'{O} sending payload : {payload.encode()}{GR}')
+	                #print(f'{O} sending payload : {payload.encode()}{GR}')
 	                server.send(payload.encode())
 	        return self.get_resp(server=server,client=client)
 
@@ -90,15 +85,12 @@ class injector():
 		res = packet.decode('utf-8','ignore')
 		status = res.split('\n')[0]
 		if status.split('-')[0]=='SSH':
-			self.logs(f'response : {status}')
+			self.logs(f'{G}response{GR} : {status}')
 			return client.send(packet)
 		else:
 			if re.match(r'HTTP/\d(\.\d)? ',status):
-				self.logs(f'response : {status}')
+				self.logs(f'{G}response{GR} : {status}')
 				client.send(b'HTTP/1.1 200 Ok\r\n\r\n')
 				return self.get_resp(server,client)
 
-	def logs(self,log):
-		logtime = str(time.ctime()).split()[3]
-		logfile = open('logs.txt','a')
-		logfile.write(f'[{logtime}] : {str(log)}\n')
+	

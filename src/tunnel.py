@@ -3,9 +3,10 @@ import time
 import select
 import threading
 from .inject import injector
-import configparser
-import ssl,os,certifi,sys
+import configparser,sys
+import ssl,os,certifi
 from pidkill import *
+
 bg=''
 G = bg+'\033[32m'
 O = bg+'\033[33m'
@@ -36,8 +37,8 @@ class Tun(injector):
 		return host
 		
 	def proxy(self,config):
-	    proxyhost = config['config']['proxyip']
-	    proxyport = int(config['config']['proxyport'])
+	    proxyhost = config['Payload']['proxyip']
+	    proxyport = int(config['Payload']['proxyport'])
 	    return [proxyhost,proxyport]
 	    
 	def conn_mode(self,config):
@@ -65,7 +66,8 @@ class Tun(injector):
 		client.close()
 		sockt.close()
 		self.logs("**connection reset by peer")
-		return handler("dns2socks")
+		return handler(self.LISTEN_PORT)
+		
 		sys.exit();
 		
 	def destination(self,client, address):
@@ -84,7 +86,6 @@ class Tun(injector):
 	        sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	        sockt.settimeout(10)
 	        sockt.connect((proxip,int(proxport)))
-	        self.logs(f'{O}[TCP] {G}connected to {proxip}:{proxport}{GR}')
 	       
 	        if mode == 2 or mode == 3  :
 	        	SNI_HOST = self.extraxt_sni(self.conf())
@@ -107,11 +108,10 @@ class Tun(injector):
 	        	self.tunneling(client,sockt)
 	    except Exception as e:
 	    	self.logs(f'{e}')
+	    	
 	def create_connection(self):
 	    sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	    self.logs('Waiting for incoming connection to : {}:{}\n'.format(self.localip,self.LISTEN_PORT))
 	    localAddress = socket.gethostbyname("localhost")
-	    print(localAddress)
 	    sockt.bind((localAddress,self.LISTEN_PORT))
 	    sockt.listen(0)
 	    while True:
@@ -119,13 +119,13 @@ class Tun(injector):
 	            client, address = sockt.accept()
 	            self.destination(client,address)
 	        except :
-		           #return handler(str(self.LISTEN_PORT))
-		           pass
+	            pass
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
 		logfile = open('logs.txt','a')
 		logfile.write(f'[{logtime}] : {str(log)}\n')
+		print(f'[{logtime}] : {str(log)}')
 if __name__=='__main__':
 	start = Tun()
 	start.create_connection()

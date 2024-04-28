@@ -5,6 +5,7 @@ import random
 import time
 import sys,os,re
 import configparser
+from pidkill import handler
 
 
 # colors
@@ -18,7 +19,7 @@ class sshRunn:
 	def __init__(self,inject_port):
 		self.inject_host = '127.0.0.1'
 		self.inject_port = inject_port
-		self.connected = False
+		self.connected = None
 		self.path = os.path.abspath(os.path.curdir)
 	
 	def LogServeMsg(self,lines):
@@ -29,30 +30,26 @@ class sshRunn:
 	def ssh_client(self,socks5_port,host,port,user,password,mode,auth_methode):
 			try:
 				
-				dynamic_port_forwarding = '-CND {}'.format(socks5_port)
-				
+				dynamic_port_forwarding = '-CND {}'.format(socks5_port)	
 				username = user 
 				inject_host= self.inject_host
 				inject_port= self.inject_port
 				nc_proxies_mode = [f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p',f'corkscrew {inject_host} {inject_port} %h %p']
-				arg = str(sys.argv[1])
 				
-				if arg == '2':
+				
+				if mode == '1' or mode == "3":
 						proxycmd =f'-o "ProxyCommand={nc_proxies_mode[0]}"'
-				elif arg =='1':
+				elif mode =='2':
 						proxycmd = f'-o "ProxyCommand={nc_proxies_mode[1]}"'
-				elif arg =='0':
-	   
+				elif mode =='0':
 					self.logs("Connecting Using Direct SSH " )
 					proxycmd =''
 				if self.enableCompress=='y':
 					      compress = "-C"
-				else:compress =""
-				#if str(publickey) == "None":
-				    
-				if str(auth_methode) == "publickey":
-				    
-				    sshcmd = f"ssh -i {password} publickey.pem {proxycmd} useless@{host}"
+				else:
+				    compress =""
+				if str(auth_methode) == "publickey":  
+				    sshcmd = f"ssh -i {password} cfgs/publickey.pem {proxycmd} useless@{host}"
 				else:
 				    sshcmd = f"sshpass -p {password} ssh {proxycmd} -F configFile host1"
 				response = subprocess.Popen(
@@ -62,8 +59,6 @@ class sshRunn:
 	              shell=True,
 	              stdout=subprocess.PIPE,
 	              stderr=subprocess.STDOUT)
-				lines= []
-				#x=True
 				for line in response.stdout:
 					line = line.decode('utf-8',errors='ignore')
 					
@@ -73,48 +68,48 @@ class sshRunn:
 					elif 'kex: algorithm:' in line:self.logs(line)
 					elif 'kex: host key algorithm:' in line:self.logs(line)
 					elif 'kex: server->client cipher:' in line:self.logs(line)
-					 
 					elif 'Next authentication method: password' in line:self.logs(G+'Authenticate to password'+GR)
 					elif 'Authentication succeeded (password).' in line:self.logs('Authentication Comleted')
-					
 					elif 'Permission denied' in line:self.logs(R+'username or password are inncorect '+GR)
 					elif 'Connection closed' in line:self.logs(R+'Connection closed ' +GR)
 					elif 'Could not request local forwarding' in line:self.logs(R+'Port used by another programs '+GR)
-					
-					
 					elif "Next authentication method: publickey" in line:
 					    self.logs(line)
 					elif 'Entering interactive session.' in line:
 					    self.logs(f'{G}connected{GR}')
 					    self.connected=True
 					
-					elif self.connected:
-					    os.system(f"cat logs.txt && bash vpn/proxification")
-					
-					    
-					    return 		
+					if self.connected:
+					    os.system(f"bash vpn/proxification > /dev/null &")
+					    self.connected=False
+					  	
 			except KeyboardInterrupt:
-			   
 			    return 
-			    
-			if self.connected==False:
-					    os.system('cat logs.txt')
 			
 	def create_connection(self,host,port,user,password,mode,auth_methode ):
-		global soc , payload
-		try:					
-		    sockslocalport  = 1080
+		try:
+		    if len(str(self.proxy).split(",")) < 1:
+		        remote_addr = self.proxy
+		    else:
+		        remote_addr = (host,port)
+		    if self.payload:
+		        payload = self.payload.replace("[host]",host)
+		    if self.sni:
+		        self.logs(f"SNI : {O}{self.sni}{GR}")
+		    self.logs(f"Connected to : {O}{remote_addr}\n{GR}sending Payload :{O}{payload}{GR}")
+		    					
+		    socksport  = 1080
+		    self.ssh_client(socksport,host,port,user,password,mode, auth_methode)
 		    
-		    sshthread = threading.Thread(target=self.ssh_client,args=(sockslocalport,host,port,user,password,mode, auth_methode))
-		    sshthread.start()
 		except ConnectionRefusedError:     
 		    self.logs("CONNECTION REFUSED")	      
-		except KeyboardInterrupt :
-		    self.logs(R+'User Abort!'+GR)
+		
 		    
 	def logs(self,log):
-	   		with open('logs.txt','a') as file:
-	   			file.write(log+'\n')
+		logtime = str(time.ctime()).split()[3]
+		logfile = open('logs.txt','a')
+		logfile.write(f'[{logtime}] : {str(log)}\n')
+		print(f'[{logtime}] : {str(log)}')
 	
 	def main(self):
         
@@ -129,11 +124,17 @@ class sshRunn:
 		self.enableCompress = config['ssh']['enable_compression']
 		auth_methode = config['ssh']['auth_methode']
 		_ = subprocess.run(["sh","ConfMake",host,user])
+		self.payload = config['Payload']['payload']
+		self.proxy =(config['Payload']['proxyip'],config['Payload']['proxyport'])
+		if mode == "2" or mode == "3":
+		    self.sni = config['sni']['server_name']
+		else:
+		    self.sni = False
 		self.create_connection(host,port,user,password,mode,auth_methode)
     
 	
 
-localport= sys.argv[2]
+localport= sys.argv[1]
 start = sshRunn(localport)
 start.main()
 		
