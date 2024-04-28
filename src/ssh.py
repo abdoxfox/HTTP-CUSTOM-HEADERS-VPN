@@ -88,11 +88,11 @@ class sshRunn:
 			
 	def create_connection(self,host,port,user,password,mode,auth_methode ):
 		try:
-		    if len(str(self.proxy).split(",")) < 1:
+		    if len(self.proxy) > 1:
 		        remote_addr = self.proxy
 		    else:
 		        remote_addr = (host,port)
-		    if self.payload:
+		    if mode =="1" or mode == "3" :
 		        payload = self.payload.replace("[host]",host)
 		    if self.sni:
 		        self.logs(f"SNI : {O}{self.sni}{GR}")
