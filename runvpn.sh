@@ -92,4 +92,4 @@ do
     trap "OnExit $signal" EXIT
 done
 
-T
+
