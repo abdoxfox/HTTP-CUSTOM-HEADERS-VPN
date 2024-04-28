@@ -62,7 +62,7 @@ function connect() {
 
 	if [ $mode = 0 ] 
         then
-           python3 src/ssh.py 0 _
+           python3 src/ssh.py 0
     else
 			
 			python3 src/ssh.py $localport 
