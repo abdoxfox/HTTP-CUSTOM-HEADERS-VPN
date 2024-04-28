@@ -5,7 +5,7 @@ import random
 import time
 import sys,os,re
 import configparser
-from pidkill import handler
+
 
 
 # colors
