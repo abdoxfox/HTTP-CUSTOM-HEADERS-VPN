@@ -1,8 +1,10 @@
 # What's New:
-* added dns2socks for resolve dns udp traffic over cloudflare dns 
-* change tunneling mode is only on settings.ini file
+*v1.0.1
+* support of publickey authentication
+* fix hotspot on android issue
+*fix some issues like usernames that contain special caracters and more.
 
-let me now if did you had some other issues to fix by opening a new issue.
+let me know if did you had some other issues to fix by opening a new issue.
 
 # HTTP CUSTOM HEADERS VPN 
 is an ssh based vpn that uses:
