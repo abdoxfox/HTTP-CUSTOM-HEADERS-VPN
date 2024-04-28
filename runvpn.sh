@@ -41,27 +41,21 @@ EOF
 bash rSetup.sh
 rm rSetup.sh
 
-
-
 clear
-
 
 mode=$(cat cfgs/settings.ini |grep "connection_mode"| awk '{print $3}')
 
 killprocess() {
 echo -e "${RED}[+] KILLING PROCESS...." 
-lport=$1
-pid=$(sudo netstat -anp|grep "$lport" | awk '{print$7}' | grep "python3"|sed -e 's/\/python3//g'|tail -1)
-kill "$pid"
 pkill ssh
 pkill redsocks
 pkill dns2socks
-
 echo -e "[+] DONE ${SCOLOR}"
 }
 function serverlistening() {
     localport="$1"
-    screen -AmdS nohup python3 main.py $localport
+    python3 main.py $localport & 
+    echo ""
 }
 function connect() {
         localport="$1"
@@ -69,31 +63,33 @@ function connect() {
 	if [ $mode = 0 ] 
         then
            python3 src/ssh.py 0 _
-        elif [ $mode = "1" ] || [ $mode = "3" ]
-	  then
-               python3 src/ssh.py 2 $localport
-	elif [ "$mode" = '2' ] 
-		then 
+    else
 			
-			python3 src/ssh.py 1 $localport 
-	else
-	  echo "${RED}mode ${mode} is not listed ${SCOLOR} "
-		exit
+			python3 src/ssh.py $localport 
+	
 	fi
 	
-	
-	
 }
+
+OnExit() {
+    lport=$1
+    pid=$(sudo netstat -anp|grep "$lport" | awk '{print$7}' | grep "python3"|sed -e 's/\/python3//g'|tail -1)
+    kill $pid
+    echo -e "${RED}Disconnected ${SCOLOR}"
+
+}
+
 for i in {9008..9999}
 do 
-   # clear
-    echo "$GREEN ++++ LOGS ++++$SCOLOR"
+    
+    echo -e "$GREEN ++++ LOGS ++++$SCOLOR"
 	rm -rf logs.txt
-	
 	serverlistening $i
 	sleep 1
-	connect $i 
+	connect $i
     killprocess $i
-   
+    signal=$(($i+1))  
+    trap "OnExit $signal" EXIT
 done
 
+T
