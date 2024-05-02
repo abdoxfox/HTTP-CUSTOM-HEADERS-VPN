@@ -1,7 +1,5 @@
 import subprocess
 import socket
-import threading
-import random
 import time
 import sys,os,re
 import configparser
@@ -27,17 +25,16 @@ class sshRunn:
 	    msg = "".join(x for x in slicemsg)
 	    self.logs(msg)
 	        
-	def ssh_client(self,socks5_port,host,port,user,password,mode,auth_methode):
+	def ssh_client(self,host,port,password,mode,auth_methode):
 			try:
-				
+				socks5_port = 1080
 				dynamic_port_forwarding = '-CND {}'.format(socks5_port)	
-				username = user 
 				inject_host= self.inject_host
 				inject_port= self.inject_port
 				nc_proxies_mode = [f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p',f'corkscrew {inject_host} {inject_port} %h %p']
 				
 				
-				if mode == '1' or mode == "3":
+				if mode in ("1","3"):
 						proxycmd =f'-o "ProxyCommand={nc_proxies_mode[0]}"'
 				elif mode =='2':
 						proxycmd = f'-o "ProxyCommand={nc_proxies_mode[1]}"'
@@ -80,29 +77,45 @@ class sshRunn:
 					    self.connected=True
 					
 					if self.connected:
-					    os.system(f"bash vpn/proxification > /dev/null &")
+					    os.system("bash vpn/proxification > /dev/null &")
 					    self.connected=False
 					  	
 			except KeyboardInterrupt:
-			    return 
+			    return None
+			except Exception as error:
+			    print(error)
+	def createConf(self,host,user):
+			_=subprocess.run(["sh","ConfMake",host,user])
 			
 	def create_connection(self,host,port,user,password,mode,auth_methode ):
 		try:
-		    if len(self.proxy) > 1:
+		    regx = r'[a-zA-Z0-9_]'
+		    if self.proxy[0] :
 		        remote_addr = self.proxy
 		    else:
 		        remote_addr = (host,port)
-		    if mode =="1" or mode == "3" :
+		    if mode in ("1" ,"3"):
 		        payload = self.payload.replace("[host]",host)
+		    else:
+		        payload = ""
 		    if self.sni:
 		        self.logs(f"SNI : {O}{self.sni}{GR}")
 		    self.logs(f"Connected to : {O}{remote_addr}\n{GR}sending Payload :{O}{payload}{GR}")
-		    					
-		    socksport  = 1080
-		    self.ssh_client(socksport,host,port,user,password,mode, auth_methode)
+		    
+		    if re.match(regx,host):
+		    	try:
+		    		host = socket.gethostbyname(host)
+		    	except:
+		  		  pass
+		  		  
+		    self.createConf(host,user)					
+		    
+		    self.ssh_client(host,port,password,mode, auth_methode)
 		    
 		except ConnectionRefusedError:     
-		    self.logs("CONNECTION REFUSED")	      
+		    self.logs("CONNECTION REFUSED")
+		except Exception as e:
+		    print(e)    
 		
 		    
 	def logs(self,log):
@@ -123,10 +136,10 @@ class sshRunn:
 		password = config['ssh']['password']
 		self.enableCompress = config['ssh']['enable_compression']
 		auth_methode = config['ssh']['auth_methode']
-		_ = subprocess.run(["sh","ConfMake",host,user])
+		
 		self.payload = config['Payload']['payload']
 		self.proxy =(config['Payload']['proxyip'],config['Payload']['proxyport'])
-		if mode == "2" or mode == "3":
+		if mode in ("2" , "3"):
 		    self.sni = config['sni']['server_name']
 		else:
 		    self.sni = False
@@ -137,5 +150,4 @@ class sshRunn:
 localport= sys.argv[1]
 start = sshRunn(localport)
 start.main()
-		
 

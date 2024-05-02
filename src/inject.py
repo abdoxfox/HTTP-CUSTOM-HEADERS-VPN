@@ -1,8 +1,6 @@
 import time
-import socket 
 import configparser
 import re
-import sys
 
 
 bg=''
@@ -17,26 +15,9 @@ class injector():
 	def __init__(self):
 		pass
 
-	def conf(self):
-		config = configparser.ConfigParser()
-		try:
-			config.read_file(open('settings.ini'))
-		except Exception as e:
-			self.logs(e)
-		return config
-
 	def getpayload(self,config):
 		payload = config['Payload']['payload']
 		return payload 
-
-	def proxy(self,config):
-	    proxyhost = config['Payload']['proxyip']
-	    proxyport = int(config['Payload']['proxyport'])
-	    return [proxyhost,proxyport]
-	def conn_mode(self,config):
-		mode = config['mode']['connection_mode']
-		return mode
-
 
 	def payloadformating(self,payload,host,port):
 		
@@ -46,17 +27,16 @@ class injector():
 		payload = payload.replace('[lf]','\n')
 		payload = payload.replace('[protocol]','HTTP/1.0')
 		payload = payload.replace('[ua]','Dalvik/2.1.0')  
-		payload = payload.replace('[raw]','CONNECT '+host+':'+port+' HTTP/1.0\r\n\r\n')
-		payload = payload.replace('[real_raw]','CONNECT '+host+':'+port+' HTTP/1.0\r\n\r\n') 
-		payload = payload.replace('[netData]','CONNECT '+host+':'+port +' HTTP/1.0')
-		payload = payload.replace('[realData]','CONNECT '+host+':'+port+' HTTP/1.0')               	
+		payload = payload.replace('[raw]',f'CONNECT {host}:{port} HTTP/1.0\r\n\r\n')
+		payload = payload.replace('[real_raw]',f'CONNECT {host}:{port} HTTP/1.0\r\n\r\n') 
+		payload = payload.replace('[netData]',f'CONNECT {host}:{port} HTTP/1.0')
+		payload = payload.replace('[realData]',f'CONNECT {host}:{port} HTTP/1.0')               	
 		payload = payload.replace('[split_delay]','[delay_split]')
 		payload = payload.replace('[split_instant]','[instant_split]')
 		payload = payload.replace('[method]','CONNECT')
-		payload = payload.replace('mip','127.0.0.1')
-		payload = payload.replace('[ssh]',host+':'+port)
+		payload = payload.replace('[ssh]',f'{host}:{port}')
 		payload = payload.replace('[lfcr]','\n\r')
-		payload = payload.replace('[host_port]',host+':'+port)
+		payload = payload.replace('[host_port]',f'{host}:{port}')
 		payload = payload.replace('[host]',host)
 		payload = payload.replace('[port]',port)
 		payload = payload.replace('[auth]','')
@@ -76,7 +56,6 @@ class injector():
 	              if payload in ['1.0','1.5','0.0'] :
 	                time.sleep(float(payload))
 	              else:
-	                #print(f'{O} sending payload : {payload.encode()}{GR}')
 	                server.send(payload.encode())
 	        return self.get_resp(server=server,client=client)
 
@@ -92,5 +71,7 @@ class injector():
 				self.logs(f'{G}response{GR} : {status}')
 				client.send(b'HTTP/1.1 200 Ok\r\n\r\n')
 				return self.get_resp(server,client)
+
+
 
 	

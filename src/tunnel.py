@@ -1,11 +1,11 @@
 import socket 
 import time
 import select
-import threading
+import configparser,sys,os
+import ssl,certifi
+from pidkill import handler
 from .inject import injector
-import configparser,sys
-import ssl,os,certifi
-from pidkill import *
+
 
 bg=''
 G = bg+'\033[32m'
@@ -16,7 +16,6 @@ Buffer_lenght = 1024 * 4
 
 class Tun(injector):
 	def __init__(self):
-		self.localip = '127.0.0.1'
 		self.LISTEN_PORT = int(sys.argv[1])
 		self.configfile = "./cfgs/settings.ini"
 
@@ -118,8 +117,8 @@ class Tun(injector):
 	        try:
 	            client, address = sockt.accept()
 	            self.destination(client,address)
-	        except :
-	            pass
+	        except Exception as e:
+	            print(e)
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
