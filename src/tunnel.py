@@ -117,8 +117,8 @@ class Tun(injector):
 	        try:
 	            client, address = sockt.accept()
 	            self.destination(client,address)
-	        except Exception as e:
-	            print(e)
+	        except :
+	            handler(self.LISTEN_PORT)
 		       
 	def logs(self,log):
 		logtime = str(time.ctime()).split()[3]
