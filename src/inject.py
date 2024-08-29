@@ -46,7 +46,7 @@ class injector():
 		return payload
 
 	def connection(self,client, server,host,port):
-	        if int(self.conn_mode(self.conf())) == 0:
+	        if int(self.conn_mode(self.conf())) in [ 0, 2]:
 	        	return self.get_resp(server=server,client=client)
 	        			       
 	        else:
