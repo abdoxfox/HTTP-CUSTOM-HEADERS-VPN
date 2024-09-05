@@ -3,7 +3,7 @@ import time
 import select
 import configparser,sys,os
 import ssl,certifi
-from pidkill import handler
+from .pidkill import handler
 from .inject import injector
 
 
