@@ -25,6 +25,8 @@ class injector():
 		payload = payload.replace('[crlf*2]','\r\n\r\n')
 		payload = payload.replace('[cr]','\r')
 		payload = payload.replace('[lf]','\n')
+		payload.replace('\\r','\r')
+		payload.replace('\\n','\n')
 		payload = payload.replace('[protocol]','HTTP/1.0')
 		payload = payload.replace('[ua]','Dalvik/2.1.0')  
 		payload = payload.replace('[raw]',f'CONNECT {host}:{port} HTTP/1.0\r\n\r\n')
