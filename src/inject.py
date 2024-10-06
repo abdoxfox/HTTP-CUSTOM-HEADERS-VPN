@@ -62,7 +62,7 @@ class injector():
 	        return self.get_resp(server=server,client=client)
 
 	def get_resp(self,server,client) :
-		packet = server.recv(1024)
+		packet = server.recv(2048)
 		res = packet.decode('utf-8','ignore')
 		status = res.split('\n')[0]
 		if status.split('-')[0]=='SSH':
@@ -71,8 +71,10 @@ class injector():
 		else:
 			if re.match(r'HTTP/\d(\.\d)? ',status):
 				self.logs(f'{G}response{GR} : {status}')
-				client.send(b'HTTP/1.1 200 Ok\r\n\r\n')
-				return self.get_resp(server,client)
+				self.logs("sending auto response \nHTTP/1.1 200 OK")
+			client.send(b'HTTP/1.1 200 Ok\r\n')
+				
+			return self.get_resp(server,client)
 
 
 

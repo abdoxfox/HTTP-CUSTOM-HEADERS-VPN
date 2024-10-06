@@ -3,7 +3,7 @@ import socket
 import time
 import sys,os,re
 import configparser
-
+import random 
 
 
 # colors
@@ -34,13 +34,12 @@ class sshRunn:
 				nc_proxies_mode = [f'nc -X CONNECT -x {inject_host}:{inject_port} %h %p',f'corkscrew {inject_host} {inject_port} %h %p']
 				
 				
-				if mode in ("1","3"):
-						proxycmd =f'-o "ProxyCommand={nc_proxies_mode[0]}"'
-				elif mode =='2':
-						proxycmd = f'-o "ProxyCommand={nc_proxies_mode[1]}"'
-				elif mode =='0':
+				if mode =='0':
 					self.logs("Connecting Using Direct SSH " )
 					proxycmd =''
+				else:
+				    proxycmd = random.choice([f'-o "ProxyCommand={nc_proxies_mode[1]}"',f'-o "ProxyCommand={nc_proxies_mode[0]}"'])
+				
 				if self.enableCompress=='y':
 					      compress = "-C"
 				else:
