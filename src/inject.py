@@ -72,7 +72,7 @@ class injector():
 			if re.match(r'HTTP/\d(\.\d)? ',status):
 				self.logs(f'{G}response{GR} : {status}')
 				self.logs("sending auto response \nHTTP/1.1 200 OK")
-			client.send(b'HTTP/1.1 200 Ok\r\n')
+			client.send(b'HTTP/1.1 200 Ok\r\n\r\n')
 				
 			return self.get_resp(server,client)
 
