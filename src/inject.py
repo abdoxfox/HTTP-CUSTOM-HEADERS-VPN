@@ -42,8 +42,8 @@ class injector():
 		payload = payload.replace('[host]',host)
 		payload = payload.replace('[port]',port)
 		payload = payload.replace('[auth]','')
-		payload = payload.replace('[split]' ,'=1.0=')
-		payload = payload.replace('[delay_split]'  ,'=1.5=')
+		payload = payload.replace('[split]' ,'=0.5=')
+		payload = payload.replace('[delay_split]'  ,'=1.0=')
 		payload = payload.replace('[instant_split]','=0.1=')
 		return payload
 
@@ -55,7 +55,7 @@ class injector():
 	        	payloads = self.payloadformating(self.getpayload(self.conf()),host,port).split('=')
 	        	
 	        for payload in payloads:
-	              if payload in ['1.0','1.5','0.0'] :
+	              if payload in ['1.0','0.5','0.1'] :
 	                time.sleep(float(payload))
 	              else:
 	                server.send(payload.encode())
