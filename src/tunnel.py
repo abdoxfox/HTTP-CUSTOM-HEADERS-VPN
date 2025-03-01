@@ -109,13 +109,29 @@ class Tun(injector):
 	    	self.logs(f'{e}')
 	    	
 	def create_connection(self):
-	    sockt = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	    localAddress = socket.gethostbyname("localhost")
-	    sockt.bind((localAddress,self.LISTEN_PORT))
-	    sockt.listen(0)
+	    for res in socket.getaddrinfo(socket.gethostbyname("localhost"), self.LISTEN_PORT, socket.AF_UNSPEC,socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
+	        af, socktype, proto, canonname, sa = res
+	        try:
+	            sockt = socket.socket(af, socktype, proto)
+	        except OSError as msg:
+	            sockt = None
+	            continue
+	        try:
+	            localAddress = socket.gethostbyname("localhost")
+	            sockt.bind((localAddress,self.LISTEN_PORT))
+	            sockt.listen(1)
+	        except OSError as msg:
+	            sockt.close()
+	            sockt = None
+	            continue
+	        break
+	    if s is None:
+	        print('Coudn\'t open socket ') 
+	    
 	    while True:
 	        try:
 	            client, address = sockt.accept()
+	            self.logs("Connected to local address")
 	            self.destination(client,address)
 	        except :
 	            handler(self.LISTEN_PORT)
