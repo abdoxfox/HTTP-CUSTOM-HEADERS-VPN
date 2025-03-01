@@ -125,7 +125,7 @@ class Tun(injector):
 	            sockt = None
 	            continue
 	        break
-	    if s is None:
+	    if sockt is None:
 	        print('Coudn\'t open socket ') 
 	    
 	    while True:
